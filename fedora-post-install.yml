@@ -1,0 +1,59 @@
+--- # The beginning of a YAML file
+- hosts: localhost # Define which host group in my inventory to run the plays of this playbook agaisnt
+  name: My Feodra post installation tasks. # Playbook description
+  become: yes # Allow privilege escalation, default is sudo.
+
+  tasks: # One or more tasks are about to be defined.
+      - name: Remove Rhythmbox # Task description printed to stdout
+        package: # Install from package manager
+            name: rhythmbox # Specify dnf package name
+            state: absent # Uninstall a package
+      - name: Install Clementine
+        package:
+            name: clementine.x86_64
+            state: present # Install a package
+      - name: Install Gnome Tweaks
+        package:
+            name: gnome-tweaks.noarch
+            state: present
+      - name: Install htop
+        package:
+            name: htop.x86_64
+            state: present
+      - name: Install Midnight Commander
+        package:
+            name: mc.x86_64
+            state: present
+            #      - name: Remove Evolution mail client
+            #        package:
+            #            name: evolution.x86_64
+            #            state: absent
+      - name: Install Mozilla Thunderbird
+        package:
+            name: thunderbird.x86_64
+            state: present
+      - name: Install KeePassXC
+        package:
+            name: keepassxc.x86_64
+            state: present
+      - name: Install Anki
+        package:
+            name: anki.noarch
+            state: present
+      - name: Install Gnome Commander
+        package:
+            name: gnome-commander.x86_64
+            state: present
+      - name: Install Spotify Flatpak
+        flatpak: # Install from flatpak
+            name: com.spotify.Client
+            state: present
+      - name: Install Dropbox Flatpak
+        flatpak: # Install from flatpak
+            name: com.dropbox.Client
+            state: present
+      - name: Install Atom Text Editor Flatpak
+        flatpak: # Install from flatpak
+            name: io.atom.Atom
+            state: present
+
