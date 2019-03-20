@@ -1,0 +1,15 @@
+# https://docs.ansible.com/ansible/latest/modules/service_module.html
+---
+- hosts: localhost
+  name: Enable & disable Apache web service
+  tasks:
+    - name: Enable httpd
+      become: yes
+      service:
+        name: httpd
+        state: started
+    - name: Disable httpd
+      become: yes
+      service:
+        name: httpd
+        state: stopped
