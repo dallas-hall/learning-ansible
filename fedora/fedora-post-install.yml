@@ -39,6 +39,9 @@
           - nautilus
           - redhat-menus
         state: present # Install packages
+    # Change Gnome settings
+    - name: Update Gnome settings
+      command: gsettings set org.gnome.software download-updates false
     # Install software that I use
     - name: Install 7zip & plugins
       package: # Use system generic package manager, doesn't always work but works with dnf
@@ -86,11 +89,16 @@
       package:
           name: vlc.x86_64
           state: present
-    - name: Install Flatpaks (Atom Text Editor, Dropbox, Spotify)
+    - name: Install Atom Text Editor - Flatpak 
       flatpak: # Install from flatpak
-          name:
-            - io.atom.Atom
-            - com.dropbox.Client
-            - com.spotify.Client
+          name: io.atom.Atom
+          state: present
+    - name: Install Dropbox - Flatpak 
+      flatpak:
+          name: com.dropbox.Client
+          state: present
+    - name: Install Spotify - Flatpak 
+      flatpak:
+          name: com.spotify.Client
           state: present
 
