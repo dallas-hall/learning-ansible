@@ -5,9 +5,9 @@
 
   tasks: # One or more tasks are about to be defined.
    # Remove unwanted Gnome software - https://eklitzke.org/lobotomizing-gnome
-    - name: Remove unwanted Gnome packages
-      dnf:
-        name:
+    - name: Remove unwanted Gnome packages # Task description
+      dnf: # Specific package manager to use
+        name: # Package names
           - cheese # Gnome web camera integration
           - evolution # Gnome mail, contacts, and calendar.
           - evolution-ews
@@ -18,10 +18,11 @@
           - gnome-documents
           - gnome-maps
           - gnome-weather
+          - rhythmbox # Gnome music player
           - totem # Gnome video player - https://github.com/GNOME/totem
-        state: absent
+        state: absent # Uninstall packages
     # Double-check that we still have the basics - https://eklitzke.org/lobotomizing-gnome
-    - name: Ensure core gnome packages are still installed
+    - name: Ensure core Gnome packages are still installed
       dnf:
         name:
           - eog
@@ -37,12 +38,20 @@
           - gnome-tweaks
           - nautilus
           - redhat-menus
-        state: present
+        state: present # Install packages
     # Install software that I use
-    - name: Install Clementine # The Taks decription displayed on stdout
+    - name: Install Anki
       package: # Use system generic package manager, doesn't always work but works with dnf
-          name: clementine.x86_64 # Package name
-          state: present # Install a package
+          name: anki.noarch
+          state: present
+    - name: Install Clementine
+      package:
+          name: clementine.x86_64
+          state: present
+    - name: Install Gnome Commander
+      package:
+          name: gnome-commander.x86_64
+          state: present
     - name: Install Gnome Tweaks
       package:
           name: gnome-tweaks.noarch
@@ -51,40 +60,40 @@
       package:
           name: htop.x86_64
           state: present
+    - name: Install KeePassXC
+      package:
+          name: keepassxc.x86_64
+          state: present
+    - name: Install menulibre - GUI Applications menu editor
+      package:
+          name: menulibre.noarch
+          state: present
     - name: Install Midnight Commander
       package:
           name: mc.x86_64
+          state: present
+    - name: Install Shutter
+      package:
+          name: shutter.noarch
           state: present
     - name: Install Mozilla Thunderbird
       package:
           name: thunderbird.x86_64
           state: present
-    - name: Install KeePassXC
-      package:
-          name: keepassxc.x86_64
-          state: present
-    - name: Install Anki
-      package:
-          name: anki.noarch
-          state: present
-    - name: Install Gnome Commander
-      package:
-          name: gnome-commander.x86_64
-          state: present
     - name: Install vlc Player
       package:
           name: vlc.x86_64
           state: present
-    - name: Install Spotify Flatpak
+    - name: Install Atom Text Editor Flatpak
       flatpak: # Install from flatpak
-          name: com.spotify.Client
+          name: io.atom.Atom
           state: present
     - name: Install Dropbox Flatpak
       flatpak:
           name: com.dropbox.Client
           state: present
-    - name: Install Atom Text Editor Flatpak
+    - name: Install Spotify Flatpak
       flatpak:
-          name: io.atom.Atom
+          name: com.spotify.Client
           state: present
- 
+
