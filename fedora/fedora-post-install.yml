@@ -1,5 +1,5 @@
 --- # The beginning of a YAML file
-- hosts: localhost # Define which host group in my inventory to run the plays of this playbook agaisnt
+- hosts: localhost,home # Define which host group in my inventory to run the plays of this playbook agaisnt
   name: My Feodra post installation tasks. # Playbook description
   become: yes # Allow privilege escalation, default is sudo.
 
@@ -40,8 +40,14 @@
           - redhat-menus
         state: present # Install packages
     # Install software that I use
-    - name: Install Anki
+    - name: Install 7zip & plugins
       package: # Use system generic package manager, doesn't always work but works with dnf
+          name:
+            - p7zip.x86_64
+            - p7zip-plugins.x86_64  
+          state: present
+    - name: Install Anki
+      package:
           name: anki.noarch
           state: present
     - name: Install Clementine
@@ -51,10 +57,6 @@
     - name: Install Gnome Commander
       package:
           name: gnome-commander.x86_64
-          state: present
-    - name: Install Gnome Tweaks
-      package:
-          name: gnome-tweaks.noarch
           state: present
     - name: Install htop
       package:
@@ -84,16 +86,11 @@
       package:
           name: vlc.x86_64
           state: present
-    - name: Install Atom Text Editor Flatpak
+    - name: Install Flatpaks (Atom Text Editor, Dropbox, Spotify)
       flatpak: # Install from flatpak
-          name: io.atom.Atom
-          state: present
-    - name: Install Dropbox Flatpak
-      flatpak:
-          name: com.dropbox.Client
-          state: present
-    - name: Install Spotify Flatpak
-      flatpak:
-          name: com.spotify.Client
+          name:
+            - io.atom.Atom
+            - com.dropbox.Client
+            - com.spotify.Client
           state: present
 
