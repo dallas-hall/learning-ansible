@@ -1,0 +1,69 @@
+---
+# Need to use --user=vagrant so the ssh attempt is in the correct username
+- hosts: localhost
+  name: Install Adopt OpenJDK JRE into Vagrant VM.
+  become: yes
+
+  # Setup installation path
+  tasks:
+    - name: Creating installation path.
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      with_items:
+        - /tmp/java-install/jre
+
+  # Upload JDK
+    - name: Upload the Adopt OpenJDK JDK with Hotspot JVM.
+      copy:
+        src: /tmp/java-download/OpenJDK8U-jre_x64_linux_hotspot_8u202b08.tar.gz
+        dest: /tmp/java-install/jre/OpenJDK8U-jre_x64_linux_hotspot_8u202b08.tar.gz
+        owner: root
+        group: root
+        mode: 0644
+
+    # Install JDK
+    - name: Extracting JDK install files.
+      unarchive:
+        src: /tmp/java-install/jre/OpenJDK8U-jre_x64_linux_hotspot_8u202b08.tar.gz
+        dest: /opt/
+        owner: root
+        group: root
+        remote_src: yes
+
+    - name: Symbolic linking of extracted JRE files.
+      file:
+        src: /opt/jdk8u202-b08-jre/
+        dest: /opt/adopt-openjdk-jre-8 # A trailing / will break this
+        owner: root
+        group: root
+        state: link
+
+    - name: Delete previous /etc/profile.d/jre_home.sh file.
+      file:
+        path: /etc/profile.d/jre_home.sh
+        state: absent
+
+    - name: Adding JRE to $PATH for all users via /etc/profile.d script - Creating script.
+      file:
+        path: /etc/profile.d/jre_home.sh
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+
+    - name: Adding JRE to $PATH for all users via /etc/profile.d script - Creating environment variables.
+      blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+        path: /etc/profile.d/jre_home.sh
+        block: |
+          export JAVA_HOME_2=/opt/adopt-openjdk-jre-8
+          export PATH=$JAVA_HOME_2/bin:$PATH
+
+    # Cleanup
+    - name: Cleanup installation path.
+      file:
+        path: /tmp/java-install/
+        state: absent

@@ -1,0 +1,70 @@
+---
+# Need to use --user=vagrant so the ssh attempt is in the correct username
+- hosts: localhost
+  name: Install Adopt OpenJDK JDK into vagrant VM.
+  become: yes
+
+  # Setup installation path
+  tasks:
+    - name: Creating installation path.
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      with_items:
+        #- /tmp/java-install/jre
+        - /tmp/java-install/jdk
+
+  # Upload JDK
+    - name: Upload the Adopt OpenJDK JDK with Hotspot JVM.
+      copy:
+        src: /tmp/java-download/OpenJDK8U-jdk_x64_linux_hotspot_8u202b08.tar.gz
+        dest: /tmp/java-install/jdk/OpenJDK8U-jdk_x64_linux_hotspot_8u202b08.tar.gz
+        owner: root
+        group: root
+        mode: 0644
+
+    # Install JDK
+    - name: Extracting JDK install files.
+      unarchive:
+        src: /tmp/java-install/jdk/OpenJDK8U-jdk_x64_linux_hotspot_8u202b08.tar.gz
+        dest: /opt/
+        owner: root
+        group: root
+        remote_src: yes
+
+    - name: Symbolic linking of extracted JDK files.
+      file:
+        src: /opt/jdk8u202-b08/
+        dest: /opt/adopt-openjdk-8 # A trailing / will break this
+        owner: root
+        group: root
+        state: link
+
+    - name: Delete previous /etc/profile.d/jdk_home.sh file.
+      file:
+        path: /etc/profile.d/jdk_home.sh
+        state: absent
+
+    - name: Adding JDK to $PATH for all users via /etc/profile.d script - Creating script.
+      file:
+        path: /etc/profile.d/jdk_home.sh
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+
+    - name: Adding JDK to $PATH for all users via /etc/profile.d script - Creating environment variables.
+      blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+        path: /etc/profile.d/jdk_home.sh
+        block: |
+          export JAVA_HOME=/opt/adopt-openjdk-8
+          export PATH=$JAVA_HOME/bin:$PATH
+
+    # Cleanup
+    - name: Cleanup installation path.
+      file:
+        path: /tmp/java-install/
+        state: absent
