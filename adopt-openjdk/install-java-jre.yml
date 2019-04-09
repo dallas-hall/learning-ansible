@@ -59,8 +59,8 @@
       blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
         path: /etc/profile.d/jre_home.sh
         block: |
-          export JAVA_HOME_2=/opt/adopt-openjdk-jre-8
-          export PATH=$JAVA_HOME_2/bin:$PATH
+          export JAVA_HOME=/opt/adopt-openjdk-jre-8
+          export PATH=$JAVA_HOME/bin:$PATH
 
     # Cleanup
     - name: Cleanup installation path.
