@@ -1,3 +1,3 @@
 # Ansible
 
-Me learning Ansible and my Ansible scripts.
+Ansible examples from when I was learning. Also some Ansible scripts that I use at work and at home.
