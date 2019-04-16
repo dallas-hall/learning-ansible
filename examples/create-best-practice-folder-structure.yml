@@ -83,3 +83,18 @@
         state: directory
         mode: 0775
       loop: "{{ my_roles|product(role_directories)|list }}"
+
+      # https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html#loops-and-conditionals
+    - name: Create nested main.yml files.
+      file:
+        path: "{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}/main.yml"
+        state: touch
+        mode: 0644
+      loop: "{{ my_roles|product(role_directories)|list }}"
+
+      # https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html#the-when-statement
+      when: ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/tasks") or
+            ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/handlers") or
+            ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/vars") or
+            ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/defaults") or
+            ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/meta")
