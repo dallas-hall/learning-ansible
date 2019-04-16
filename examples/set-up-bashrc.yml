@@ -1,0 +1,102 @@
+---
+- hosts: opendev-centos-vm
+  name: Upload .bashrc files for local user and root.
+  become: yes
+
+  tasks:
+  - name: Adding customisations to the /home/vagrant/.bashrc file
+    blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+      path: /home/vagrant/.bashrc
+      block: |
+        # User specific aliases and functions
+        alias dev='cd ~/dev'
+        #custom ls aliases
+        #full details on everything
+        alias l='ls -aFlh --color=auto'
+        #full details for hidden things only
+        alias l.='ls -adFlhi .* --color=auto'
+        #full details with inode
+        alias li='ls -aFlhi --color=auto'
+        #change directory colour from dark blue to light blue
+        LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
+
+        #coloured man pages
+        man() {
+            env \
+            LESS_TERMCAP_mb=$'\e[01;31m' \
+            LESS_TERMCAP_md=$'\e[01;31m' \
+            LESS_TERMCAP_me=$'\e[0m' \
+            LESS_TERMCAP_se=$'\e[0m' \
+            LESS_TERMCAP_so=$'\e[01;44;33m' \
+            LESS_TERMCAP_ue=$'\e[0m' \
+            LESS_TERMCAP_us=$'\e[01;32m' \
+            man "$@"
+        }
+        export GROFF_NO_SGR=1 #needed to get colours working
+
+        #custom bash prompt
+        # http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
+        export PS1="\[\033[38;5;10m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;250m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;11m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+
+        #shell history ignores if the same command was entered
+        export HISTCONTROL=ignoreboth:erasedups
+
+        #increase history size
+        export HISTSIZE=9999
+
+        #allow vim commands in bash
+        set -o vi
+
+        # bash tracing with line numbers - use #!/bin/bash -x
+        export PS4='$LINENO + '
+
+  - name: Adding customisations to the /root/.bashrc file
+    blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+      owner: root
+      group: root
+      mode: 0644
+      path: /root/.bashrc
+      block: |
+        # User specific aliases and functions
+        alias rm='rm -i'
+        alias cp='cp -i'
+        alias mv='mv -i'
+        alias l='ls -aFlh --color=auto'
+        alias l.='ls -adFlhi .* --color=auto'
+        alias li='ls -aFlhi --color=auto'
+
+        #change directory colour from dark blue to light blue
+        LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
+
+        #coloured man pages
+        man() {
+            env \
+            LESS_TERMCAP_mb=$'\e[01;31m' \
+            LESS_TERMCAP_md=$'\e[01;31m' \
+            LESS_TERMCAP_me=$'\e[0m' \
+            LESS_TERMCAP_se=$'\e[0m' \
+            LESS_TERMCAP_so=$'\e[01;44;33m' \
+            LESS_TERMCAP_ue=$'\e[0m' \
+            LESS_TERMCAP_us=$'\e[01;32m' \
+            man "$@"
+        }
+        export GROFF_NO_SGR=1 #needed to get colours working
+
+        #custom bash prompt
+        # http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
+        export PS1="\[\033[38;5;9m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;250m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;11m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+
+        #shell history ignores if the same command was entered
+        export HISTCONTROL=ignoreboth:erasedups
+
+        #increase history size
+        export HISTSIZE=9999
+
+        #allow vim commands in bash
+        set -o vi
+
+        # bash tracing with line numbers - use #!/bin/bash -x
+        export PS4='$LINENO + '
