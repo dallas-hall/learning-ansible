@@ -1,0 +1,42 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#directory-layout
+---
+- hosts: localhost
+  name: Setup Ansible best practice directory structure.
+  become: no
+  vars:
+    working_path: "{{ ansible_facts['env']['HOME'] }}/tmp/ansible"
+    #role_names: { common }
+
+  tasks:
+    - name: Create the directory structure.
+      file:
+        path: "{{ working_path }}/{{ item }}"
+        state: directory
+        mode: 0775
+      with_items:
+        - production/ # inventory file for production servers
+        - staging/  # inventory file for staging environment
+        - group_vars/ # here we assign variables to particular groups
+        - host_vars/ # here we assign variables to particular systems
+        - library/ # if any custom modules, put them here (optional)
+        - module_utils/ # if any custom module_utils to support modules, put them here (optional)
+        - filter_plugins/ # if any custom filter plugins, put them here (optional)
+        - roles/common # a roll common to everything
+        - roles/common/tasks/ # smaller files for tasks
+        - roles/common/handlers/ # handler files
+        - roles/common/templates/ # end with .j2
+        - roles/common/files/ # files for copying or scripts
+        - roles/common/vars/ # role specific variables
+        - roles/common/defaults/ # low precedence variables for this role
+        - roles/common/meta/ # role dependencies
+        - roles/common/library/ # custom modules
+        - roles/common/module_utils/ # custom module utilities
+        - roles/common/lookup_plugins/ # custom plugin named lookup
+
+    - name: Create the files.
+      file:
+        path: "{{ working_path }}/{{ item }}"
+        state: touch
+        mode: 0775
+      with_items:
+        -
