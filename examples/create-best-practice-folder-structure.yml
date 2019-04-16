@@ -5,38 +5,61 @@
   become: no
   vars:
     working_path: "{{ ansible_facts['env']['HOME'] }}/tmp/ansible"
-    #role_names: { common }
+    base_directories:
+      - production # inventory file for production servers
+      - staging  # inventory file for staging environment
+      - group_vars # here we assign variables to particular groups
+      - host_vars # here we assign variables to particular systems
+      - library # if any custom modules, put them here (optional)
+      - module_utils # if any custom module_utils to support modules, put   em here (optional)
+      - filter_plugins # if any custom filter plugins, put them here   ptional)
+      - roles # all roles go here
+    my_roles:
+      - common # all
+      - MY-ROLE-1 # custom roles for server / app / whatever
+      - MY-ROLE-2
+    role_directories: # All roles get these directories
+      - tasks # smaller files for tasks
+      - handlers # handler files
+      - templates # end with .j2
+      - files # files for copying or scripts
+      - vars # role specific variables
+      - defaults # low precedence variables for this role
+      - meta # role dependencies
+      - library # custom modules
+      - module_utils # custom modules uilities
+      - plugins # custom plugins
+    role_files:
+      - site.yml
+      - group1.yml
+      - group2.yml
+      - hostname1.yml
+      - hostname2.yml
+
+
 
   tasks:
-    - name: Create the directory structure.
+    #- debug:
+    #    msg: "working_path is {{ working_path }}"
+    #- debug:
+    #    msg: "my_roles is {{ my_roles }}"
+    #- debug:
+    #    msg: "role_directories is {{ role_directories }}"
+
+    - name: Create the base directory structure.
       file:
         path: "{{ working_path }}/{{ item }}"
         state: directory
         mode: 0775
-      with_items:
-        - production/ # inventory file for production servers
-        - staging/  # inventory file for staging environment
-        - group_vars/ # here we assign variables to particular groups
-        - host_vars/ # here we assign variables to particular systems
-        - library/ # if any custom modules, put them here (optional)
-        - module_utils/ # if any custom module_utils to support modules, put them here (optional)
-        - filter_plugins/ # if any custom filter plugins, put them here (optional)
-        - roles/common # a roll common to everything
-        - roles/common/tasks/ # smaller files for tasks
-        - roles/common/handlers/ # handler files
-        - roles/common/templates/ # end with .j2
-        - roles/common/files/ # files for copying or scripts
-        - roles/common/vars/ # role specific variables
-        - roles/common/defaults/ # low precedence variables for this role
-        - roles/common/meta/ # role dependencies
-        - roles/common/library/ # custom modules
-        - roles/common/module_utils/ # custom module utilities
-        - roles/common/lookup_plugins/ # custom plugin named lookup
+      # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-items
+      loop: "{{ base_directories|flatten(levels=1) }}"
 
-    - name: Create the files.
+      # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-nested-with-cartesian
+    - name: Create the nested 'roles' directory structure.
+      #debug:
+      #  msg: "{{ item.0 }}/{{ item.1 }}"
       file:
-        path: "{{ working_path }}/{{ item }}"
-        state: touch
+        path: "{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}"
+        state: directory
         mode: 0775
-      with_items:
-        -
+      loop: "{{ my_roles|product(role_directories)|list }}"
