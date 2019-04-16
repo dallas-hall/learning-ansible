@@ -14,12 +14,15 @@
       - module_utils # if any custom module_utils to support modules, put   em here (optional)
       - filter_plugins # if any custom filter plugins, put them here   ptional)
       - roles # all roles go here
+    group_playbook_files:
+      - MY-GROUP-1-PLAYBOOK.yml
+      - MY-GROUP-2-PLAYBOOK.yml
     group_var_files:
-      - MY-GROUP-1.yml # custom playbooks for groups (server / app / whatever)
-      - MY-GROUP-2.yml
+      - MY-GROUP-1-group_var.yml # custom playbooks for groups (server / app / whatever)
+      - MY-GROUP-2-group_var.yml
     host_var_files:
-      - MY-HOST-1.yml # custom playbooks for hosts
-      - MY-HOST-2.yml
+      - MY-HOST-1-host_var.yml # custom playbooks for hosts
+      - MY-HOST-2-host_var.yml
     my_roles:
       - common # all
       - MY-ROLE-1 # custom roles for groups (server / app / whatever)
@@ -59,6 +62,13 @@
         path: "{{ working_path }}/site.yml"
         state: touch
         mode: 0644
+
+    - name: Create the group playbook files.
+      file: # master file
+        path: "{{ working_path }}/{{ item }}"
+        state: touch
+        mode: 0644
+      loop: "{{ group_playbook_files|flatten(levels=1) }}"
 
     - name: Create group_var files.
       file:
