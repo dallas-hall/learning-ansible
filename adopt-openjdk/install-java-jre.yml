@@ -1,6 +1,6 @@
 ---
 # Need to use --user=vagrant so the ssh attempt is in the correct username
-- hosts: vagrant-vms
+- hosts: opendev-centos-vm
   name: Install Adopt OpenJDK JRE into Vagrant VM.
   become: yes
 
