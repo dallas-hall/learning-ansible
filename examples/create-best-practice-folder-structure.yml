@@ -14,9 +14,15 @@
       - module_utils # if any custom module_utils to support modules, put   em here (optional)
       - filter_plugins # if any custom filter plugins, put them here   ptional)
       - roles # all roles go here
+    group_var_files:
+      - MY-GROUP-1.yml # custom playbooks for groups (server / app / whatever)
+      - MY-GROUP-2.yml
+    host_var_files:
+      - MY-HOST-1.yml # custom playbooks for hosts
+      - MY-HOST-2.yml
     my_roles:
       - common # all
-      - MY-ROLE-1 # custom roles for server / app / whatever
+      - MY-ROLE-1 # custom roles for groups (server / app / whatever)
       - MY-ROLE-2
     role_directories: # All roles get these directories
       - tasks # smaller files for tasks
@@ -29,14 +35,8 @@
       - library # custom modules
       - module_utils # custom modules uilities
       - plugins # custom plugins
-    role_files:
-      - site.yml
-      - group1.yml
-      - group2.yml
-      - hostname1.yml
-      - hostname2.yml
-
-
+    main_file:
+      - main.yml # Used to control roles
 
   tasks:
     #- debug:
@@ -53,6 +53,26 @@
         mode: 0775
       # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-items
       loop: "{{ base_directories|flatten(levels=1) }}"
+
+    - name: Create the master playbook file.
+      file: # master file
+        path: "{{ working_path }}/site.yml"
+        state: touch
+        mode: 0644
+
+    - name: Create group_var files.
+      file:
+        path: "{{ working_path }}/group_vars/{{ item }}"
+        state: touch
+        mode: 0644
+      loop: "{{ group_var_files|flatten(levels=1) }}"
+
+    - name: Create host_var files.
+      file:
+        path: "{{ working_path }}/host_vars/{{ item }}"
+        state: touch
+        mode: 0644
+      loop: "{{ host_var_files|flatten(levels=1) }}"
 
       # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-nested-with-cartesian
     - name: Create the nested 'roles' directory structure.
