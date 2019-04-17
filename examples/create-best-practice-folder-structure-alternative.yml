@@ -19,21 +19,18 @@
     group_playbook_files:
       - hadoop-cluster.yml
       - hadoop-master.yml
-      - hadoop-slave.yml
+      - hadoop-slaves.yml
     var_directories:
       - group_vars
       - host_vars
     group_vars_files: # custom variables for groups
       - hadoop-cluster.yml
       - hadoop-master.yml
-      - hadoop-slave.yml
+      - hadoop-slaves.yml
     host_vars_files: # custom variables for hosts
       - hadoop-master.namenode.yml
       - hadoop-slave.datanode01.yml
       - hadoop-slave.datanode02.yml
-      - hadoop-slave.datanode03.yml
-      - hadoop-slave.datanode04.yml
-      - hadoop-slave.datanode05.yml
     my_roles:
       - common # all, thus covering hadoop-cluster
       - hadoop-master
