@@ -47,7 +47,7 @@
       package: # Use system generic package manager, doesn't always work but works with dnf
           name:
             - p7zip.x86_64
-            - p7zip-plugins.x86_64  
+            - p7zip-plugins.x86_64
           state: present
     - name: Install Anki
       package:
@@ -89,16 +89,19 @@
       package:
           name: vlc.x86_64
           state: present
-    - name: Install Atom Text Editor - Flatpak 
-      flatpak: # Install from flatpak
-          name: io.atom.Atom
-          state: present
-    - name: Install Dropbox - Flatpak 
+    # https://fedoramagazine.org/using-ansible-setup-workstation/
+    - name: Enable Flathub repo.
+      become: yes
+      command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#    - name: Install Atom Text Editor - Flatpak
+#      flatpak: # Install from flatpak
+#          name: io.atom.Atom
+#          state: present
+    - name: Install Dropbox - Flatpak
       flatpak:
           name: com.dropbox.Client
           state: present
-    - name: Install Spotify - Flatpak 
+    - name: Install Spotify - Flatpak
       flatpak:
           name: com.spotify.Client
           state: present
-
