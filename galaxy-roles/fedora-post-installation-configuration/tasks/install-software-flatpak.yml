@@ -1,0 +1,14 @@
+#- name: Install Atom Text Editor - Flatpak
+#  flatpak: # Install from flatpak
+#      name: io.atom.Atom
+#      state: present
+
+- name: Install Dropbox - Flatpak
+  flatpak:
+      name: com.dropbox.Client
+      state: present
+
+- name: Install Spotify - Flatpak
+  flatpak:
+      name: com.spotify.Client
+      state: present

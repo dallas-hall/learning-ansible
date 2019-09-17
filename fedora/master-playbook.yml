@@ -1,0 +1,7 @@
+---
+- name: Configure Fedora to my liking.
+  hosts: localhost
+  become: yes
+  gather_facts: yes
+  roles:
+    - fedora-post-installation-configuration

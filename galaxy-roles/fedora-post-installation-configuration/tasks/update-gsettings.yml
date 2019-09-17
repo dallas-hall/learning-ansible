@@ -1,0 +1,9 @@
+# Change Gnome settings
+- name: Update Gnome settings - Disable PackageKit downloads
+  command: gsettings set org.gnome.software download-updates false
+
+- name: Update Gnome settings - Set mouse speed to 0
+  command: gsettings set org.gnome.desktop.peripherals.mouse speed 0.0
+
+- name: Update Gnome settings - Remove mouse acceleration
+  command: gsettings set org.gnome.desktop.peripherals.mouse accel-profile 'flat'
