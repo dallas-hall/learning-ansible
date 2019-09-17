@@ -1,0 +1,61 @@
+- name: Install 7zip & plugins
+  package: # Use system generic package manager, doesn't always work but works with dnf
+      name:
+        - p7zip.x86_64
+        - p7zip-plugins.x86_64
+      state: present
+
+- name: Install Anki
+  package:
+      name: anki.noarch
+      state: present
+
+- name: Install Clementine
+  package:
+      name: clementine.x86_64
+      state: present
+
+- name: Install Gnome Commander
+  package:
+      name: gnome-commander.x86_64
+      state: present
+
+- name: Install htop
+  package:
+      name: htop.x86_64
+      state: present
+
+- name: Install KeePassXC
+  package:
+      name: keepassxc.x86_64
+      state: present
+
+- name: Install menulibre - GUI Applications menu editor
+  package:
+      name: menulibre.noarch
+      state: present
+
+- name: Install Midnight Commander
+  package:
+      name: mc.x86_64
+      state: present
+
+- name: Install Shutter
+  package:
+      name: shutter.noarch
+      state: present
+
+- name: Install Mozilla Thunderbird
+  package:
+      name: thunderbird.x86_64
+      state: present
+
+- name: Install VLC Player
+  package:
+      name: vlc.x86_64
+      state: present
+
+- name: Install Okular Player
+  package:
+      name: okular
+      state: present
