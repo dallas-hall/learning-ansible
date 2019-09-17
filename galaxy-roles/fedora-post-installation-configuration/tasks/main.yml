@@ -1,0 +1,27 @@
+- name: Update Gnome Software - remove unwanted stuff.
+  import_tasks: remove-unwanted-gnome-software.yml
+  become: yes
+
+- name: Update Gnome Software - check core functionality still exists.
+  import_tasks: check-core-gnome-software-is-installed.yml
+  become: yes
+
+- name: Update Gnome settings
+  import_tasks: update-gsettings.yml
+  become: yes
+
+- name: Install RPM Fusion repo.
+  import_tasks: install-rpm-fusion.yml
+  become: yes
+
+- name: Add ~/.bashrc entries
+  import_tasks: set-up-bashrc.yml
+  become: yes
+
+- name: Install software - dnf.
+  import_tasks: install-software-dnf.yml
+  become: yes
+
+- name: Install software - flatpak.
+  import_tasks: install-software-flatpak.yml
+  become: yes

@@ -1,0 +1,17 @@
+# Remove unwanted Gnome software - https://eklitzke.org/lobotomizing-gnome
+- name: Remove unwanted Gnome packages # Task description
+  dnf: # Specific package manager to use
+    name: # Package names
+      - cheese # Gnome web camera integration
+      - evolution # Gnome mail, contacts, and calendar.
+      - evolution-ews
+      - evolution-help
+      - gfbgraph # GLib/GObject wrapper for the Facebook API - https://wiki.gnome.org/Projects/GFBGraph
+      - gnome-boxes # VM
+      - gnome-contacts
+      - gnome-documents
+      - gnome-maps
+      - gnome-weather
+      - rhythmbox # Gnome music player
+      - totem # Gnome video player - https://github.com/GNOME/totem
+    state: absent # Uninstall packages
