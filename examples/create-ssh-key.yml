@@ -6,16 +6,26 @@
     - ssh_key_destination: test_destination
     - ssh_username: blindcant
     - ssh_algorithm: ed25519
-    - ssh_comment: "{{ansible_hostname}} -> {{ ssh_key_destination }}"
-    - ssh_id_creation_path: /tmp/
+    - ssh_comment: "{{ ssh_username }}@{{ansible_hostname}}->{{ ssh_key_destination }}"
+    - ssh_id_creation_path: /tmp
     - ssh_id_file_name: "id_{{ ssh_algorithm }}_{{ ssh_key_destination }}"
 
   tasks:
-    - name: Create the cluster's ssh key pair on the Ansible host.
-      #command: ssh-keygen -t "{{ ssh_algorithm }}" -f "{{ ssh_id_creation_path }}/{{ ssh_id_file_name }}" -C "{{ ssh_comment }}"
-      user:
-        name: "{{ ssh_username }}"
-        generate_ssh_key: yes
-        ssh_key_type: "{{ ssh_algorithm }}"
-        ssh_key_file: "{{ ssh_id_creation_path }}/{{ ssh_id_file_name }}"
-        ssh_key_comment: "{{ ssh_comment }}"
+    # https://docs.ansible.com/ansible/latest/modules/user_module.html
+    # - name: Create the cluster's ssh key pair on the Ansible host - user module.
+    #   user:
+    #     name: "{{ ssh_username }}"
+    #     generate_ssh_key: yes
+    #     ssh_key_type: "{{ ssh_algorithm }}"
+    #     ssh_key_file: "{{ ssh_id_creation_path }}/{{ ssh_id_file_name }}"
+    #     ssh_key_comment: "{{ ssh_comment }}"
+
+    # - name: Create the cluster's ssh key pair on the Ansible host - command module.
+    #   command: ssh-keygen -t "{{ ssh_algorithm }}" -f "{{ ssh_id_creation_path }}/{{ ssh_id_file_name }}" -C "{{ ssh_comment }}"
+
+    # https://docs.ansible.com/ansible/latest/modules/openssh_keypair_module.html
+    - name: Create the cluster's ssh key pair on the Ansible host - openssh keypair module.
+      openssh_keypair:
+        path: "{{ ssh_id_creation_path }}/{{ ssh_id_file_name }}"
+        type: "{{ ssh_algorithm }}"
+        comment: "{{ ssh_comment }}"
