@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  name: Create an ssh key comment for each user and host.
+  become: no
+  vars:
+    usernames:
+      - alice
+      - bob
+    hostnames:
+      - host01
+      - host02
+      - host03
+    destination: destination-server
+
+  tasks:
+    - name: Cartesian product of users and hosts for ssh key comments.
+      debug: msg="{{ item[0] }}{{ item[1] }}{{ item[2] }}{{ item[3] }}{{ item[4] }}"
+      with_cartesian:
+        - "{{ usernames }}"
+        - "@"
+        - "{{ hostnames }}"
+        - "->"
+        - "{{ destination }}"
