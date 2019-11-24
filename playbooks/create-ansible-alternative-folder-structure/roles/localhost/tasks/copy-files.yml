@@ -1,0 +1,14 @@
+---
+- name: Copy master-playbook.yml file to the base folder.
+  copy:
+    # This will search in ./roles/localhost/files so we don't need an asbolute path here.
+    src: master-playbook.yml
+    dest: "{{ working_path }}/"
+    mode: 0644
+
+- name: Copy hosts.yml file to each environment inventory folder.
+  copy:
+    src: inventories/hosts.yml
+    dest: "{{ working_path }}/inventories/{{ item }}"
+    mode: 0644
+  loop: "{{ environment_directories|flatten(levels=1) }}"
