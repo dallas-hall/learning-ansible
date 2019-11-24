@@ -4,45 +4,36 @@
   name: Setup Ansible best practice alternative directory structure.
   become: no
   vars:
-    working_path: "{{ ansible_facts['env']['HOME'] }}/tmp/ansible"
+    working_path: "{{ ansible_facts['env']['HOME'] }}/Development/ansible/create-ansible-alternative-folder-structure"
     base_directories:
       - inventories # all inventory files go here
       #- library # if any custom modules, put them here (optional)
       #- module_utils # if any custom module_utils to support modules, put   em here (optional)
       #- filter_plugins # if any custom filter plugins, put them here   ptional)
       - roles # all roles go here
-      - playbooks # all playbooks go here
     environment_directories:
       - dev-test
-      - staging
-      - production
+      #- staging
+      #- production
     group_playbook_files:
-      - hadoop-cluster.yml
-      - hadoop-master.yml
-      - hadoop-slaves.yml
+      - localhost.yml
     var_directories:
       - group_vars
       - host_vars
     group_vars_files: # custom variables for groups
-      - hadoop-cluster.yml
-      - hadoop-master.yml
-      - hadoop-slaves.yml
+      - localhost.yml
     host_vars_files: # custom variables for hosts
-      - hadoop-master.namenode.yml
-      - hadoop-slave.datanode01.yml
-      - hadoop-slave.datanode02.yml
+      - localhost.yml
     my_roles:
-      - common # all, thus covering hadoop-cluster
-      - hadoop-master
-      - hadoop-slave
+      - common # all groups and hosts
     role_directories: # All roles have these directories
       - tasks # smaller files for tasks
       #- handlers # handler files
-      - templates # end with .j2
+      #- templates # end with .j2
       - files # files for copying or scripts
       - vars # role specific variables
-      - defaults # low precedence variables for this role
-      - meta # role dependencies
+      #- defaults # low precedence variables for this role
+      #- meta # role dependencies
       #- library # custom modules
       #- module_utils # custom modules uilities
       #- plugins # custom plugins
@@ -54,6 +45,11 @@
     #    msg: "my_roles is {{ my_roles }}"
     #- debug:
     #    msg: "role_directories is {{ role_directories }}"
+    - name: Create the base folder.
+      file:
+        path: "{{ working_path }}/"
+        state: directory
+        mode: 0755
 
     - name: Create the base directory structure.
       file:
@@ -65,16 +61,9 @@
 
     - name: Create the master playbook file.
       file: # master file
-        path: "{{ working_path }}/playbooks/master-playbook.yml"
+        path: "{{ working_path }}/master-playbook.yml"
         state: touch
         mode: 0644
-
-    - name: Create the group playbook files.
-      file: # master file
-        path: "{{ working_path }}/playbooks/{{ item }}"
-        state: touch
-        mode: 0644
-      loop: "{{ group_playbook_files|flatten(levels=1) }}"
 
       # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-nested-with-cartesian
     - name: Create the nested 'roles' directory structure.
