@@ -1,0 +1,4 @@
+---
+username: "{{ ansible_facts['env']['USER'] }}"
+home_path: "{{ ansible_facts['env']['HOME'] }}"
+ansible_connection: local

@@ -1,0 +1,5 @@
+- name: Folder structure set up.
+  import_tasks: create-best-practice-folder-structure-alternative.yml
+
+- name: Copy necessary files.
+  import_tasks: copy-files.yml
