@@ -16,6 +16,7 @@ export PATH
 alias dev='cd ~/Development'
 alias dls='cd ~/Downloads'
 alias opt='cd ~/opt'
+alias opt2='cd /opt'
 alias docs='cd ~/Documents'
 {% if laptop %}
 alias dev2='cd /media/data-hdd/Development'
@@ -88,3 +89,11 @@ export VAGRANT_DOTFILE_PATH="/media/data-hdd/Development"
 export VAGRANT_HOME="/media/veracrypt2/Development/vagrant"
 export VAGRANT_DOTFILE_PATH="/media/veracrypt2/Development"
 {% endif %}
+VAGRANT_DEFAULT_PROVIDER='virtualbox'
+
+ATOM_INSTALLED_VERSION=$(rpm -qi atom | grep "Version" |  cut -d ':' -f 2 | cut -d ' ' -f 2)
+ATOM_LATEST_VERSION=$(curl -sL "https://api.github.com/repos/atom/atom/releases/latest" | grep -E "https.*atom-amd64.tar.gz" | cut -d '"' -f 4 | cut -d '/' -f 8 | sed 's/v//g')
+
+if [[ $ATOM_INSTALLED_VERSION < $ATOM_LATEST_VERSION ]]; then
+  sudo dnf install -y https://github.com/atom/atom/releases/download/v${ATOM_LATEST_VERSION}/atom.x86_64.rpm
+fi
