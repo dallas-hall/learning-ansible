@@ -1,0 +1,10 @@
+# https://opensource.com/article/18/7/sysadmin-tasks-ansible
+---
+- name: Copy my public ssh key.
+  authorized_key:
+    user: "{{ item.user }}"
+    key: "{{ item.key }}"
+    state: "{{ item.state }}"
+    comment: "{{ item.comment }}"
+  loop:
+    - { user: 'vagrant', key: "{{ lookup('file', '/home/blindcant/.ssh/id_ed25519_vagrant.pub') }}", state: 'present', comment: 'blindcant@laptop-dell->my-vagrant-vms' }
