@@ -1,0 +1,7 @@
+---
+- name: .bashrc customisations.
+  import_tasks: set-up-bashrc.yml
+  become: yes
+
+- name: My laptop to vagrant VM SSH key.
+  import_tasks: deploy-my-public-ssh-key.yml
