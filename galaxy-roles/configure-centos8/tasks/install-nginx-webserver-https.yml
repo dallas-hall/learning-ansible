@@ -1,0 +1,41 @@
+---
+- name: Install Nginx
+# https://docs.ansible.com/ansible/latest/modules/dnf_module.html
+  dnf:
+    name: nginx
+
+- name: Create directories for Nginx confiugration files.
+# https://docs.ansible.com/ansible/latest/modules/file_module.html
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#standard-loops
+  loop:
+    - /etc/nginx/sites-available/
+    - /etc/nginx/sites-enable/
+
+- name: Copy Nginx configuration file
+# https://docs.ansible.com/ansible/latest/modules/copy_module.html
+  copy:
+    src: files/nginx.conf
+    dest: /etc/nginx/sites-available/default
+
+- name: Enable configuration
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enable/default
+    state: link
+
+- name: Create index.html
+# https://docs.ansible.com/ansible/latest/modules/template_module.html
+  template:
+    src: templates/index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    mode: 0644
+
+- name: Restart Nginx
+# https://docs.ansible.com/ansible/latest/modules/systemd_module.html
+  systemd:
+    name: nginx
+    state: restarted
