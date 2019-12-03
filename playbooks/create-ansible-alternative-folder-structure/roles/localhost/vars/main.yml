@@ -1,0 +1,38 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html#using-roles
+working_path: "/tmp/test"
+base_directories:
+  - inventories # all inventory files go here
+  #- library # if any custom modules, put them here (optional)
+  #- module_utils # if any custom module_utils to support modules, put them here (optional)
+  #- filter_plugins # if any custom filter plugins, put them here (optional)
+  - roles # all roles go here
+environment_directories:
+  - unclassified
+  - opendev
+group_playbook_files:
+  - localhost.yml
+var_directories:
+  - group_vars
+  - host_vars
+group_vars_files: # custom variables for groups
+  - localhost.yml
+  #- my-ansible-group.yml
+host_vars_files: # custom variables for hosts
+  - localhost.yml
+  #- some-unique-hostname.yml
+my_roles:
+  - common # all groups and hosts
+  - ambari-server
+  - ambari-agent
+
+role_directories: # All roles have these directories
+  - tasks # smaller files for tasks
+  - handlers # handler files
+  - templates # end with .j2
+  - files # files for copying or scripts to run
+  - vars # role specific variables
+  - defaults # low precedence variables for this role
+  #- meta # role dependencies
+  #- library # custom modules
+  #- module_utils # custom modules uilities
+  #- plugins # custom plugins

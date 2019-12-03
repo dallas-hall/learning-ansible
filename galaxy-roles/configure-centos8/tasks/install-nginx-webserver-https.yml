@@ -1,0 +1,73 @@
+---
+- name: Install Nginx
+# https://docs.ansible.com/ansible/latest/modules/dnf_module.html
+  dnf:
+    name: nginx
+
+# Replaced by using /etc/nginx/conf.d/ which is covered /etc/nginx/nginx.conf
+# and the line include /etc/nginx/default.d/*.conf
+# https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/
+# - name: Create directories for Nginx confiugration files.
+# # https://docs.ansible.com/ansible/latest/modules/file_module.html
+#   file:
+#     path: "{{ item }}"
+#     state: directory
+#     mode: '0755'
+#   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#standard-loops
+#   loop:
+#     - /etc/nginx/sites-available/
+#     - /etc/nginx/sites-enable/
+
+- name: Copy templated Nginx configuration file
+# https://docs.ansible.com/ansible/latest/modules/copy_module.html
+  template:
+    src: templates/nginx.conf.j2
+    dest: "{{ nginx_conf_file }}"
+  notify: restart nginx
+
+# Replaced by the same thing above.
+# - name: Enable configuration
+#   file:
+#     src: "{{ nginx_conf_file }}"
+#     dest: /etc/nginx/sites-enable/default
+#     state: link
+#   notify: restart nginx
+
+- name: Create directories for Nginx SSL/TLS certificates.
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/nginx/ssl
+
+- name: Copy TLS key
+  copy:
+    src: files/nginx.key
+    dest: "{{ nginx_key_file }}"
+    owner: root
+    mode: '0600'
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#handlers-running-operations-on-change
+  notify: restart nginx
+
+- name: Copy TLS certificate
+  copy:
+    src: files/nginx.crt
+    dest: "{{ nginx_cert_file }}"
+    owner: root
+    mode: '0644'
+  notify: restart nginx
+
+- name: Create index.html
+# https://docs.ansible.com/ansible/latest/modules/template_module.html
+  template:
+    src: templates/index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    mode: '0644'
+
+# Handlers doesn't work with vagrant provision, but works with ansible-playbook
+# - name: Restart Nginx
+# # https://docs.ansible.com/ansible/latest/modules/systemd_module.html
+#   systemd:
+#     name: nginx
+#     state: restarted

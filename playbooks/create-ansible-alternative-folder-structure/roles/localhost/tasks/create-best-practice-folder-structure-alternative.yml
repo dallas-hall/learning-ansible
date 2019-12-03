@@ -1,0 +1,74 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#alternative-directory-layout
+---
+- name: Create the base directory structure.
+  file:
+    path: "{{ working_path }}/{{ item }}"
+    state: directory
+    mode: 0775
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-items
+  loop: "{{ base_directories|flatten(levels=1) }}"
+
+- name: Create the master playbook file.
+  file: # master file
+    path: "{{ working_path }}/master-playbook.yml"
+    state: touch
+    mode: 0644
+
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-nested-with-cartesian
+- name: Create the nested 'roles' directory structure.
+  #debug:
+  #  msg: "{{ item.0 }}/{{ item.1 }}"
+  file:
+    path: "{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}"
+    state: directory
+    mode: 0775
+  loop: "{{ my_roles|product(role_directories)|list }}"
+
+- name: Create nested main.yml files.
+  file:
+    path: "{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}/main.yml"
+    state: touch
+    mode: 0644
+  loop: "{{ my_roles|product(role_directories)|list }}"
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html#the-when-statement
+  # TO DO: Fix the Jinga2 warning created here.
+  when: ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/tasks") or
+        ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/handlers") or
+        ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/vars") or
+        ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/defaults") or
+        ("{{ working_path }}/roles/{{ item.0 }}/{{ item.1 }}" == "{{ working_path }}/roles/{{ item.0 }}/meta")
+
+- name: Create environment directories.
+  file:
+    path: "{{ working_path }}/inventories/{{ item }}"
+    state: directory
+    mode: 0755
+  loop: "{{ environment_directories|flatten(levels=1) }}"
+
+- name: Create enviroment host files.
+  file:
+    path: "{{ working_path }}/inventories/{{ item }}/hosts.yml"
+    state: touch
+    mode: 0644
+  loop: "{{ environment_directories|flatten(levels=1) }}"
+
+- name: Create the nested 'var' directory structure.
+  file:
+    path: "{{ working_path }}/inventories/{{ item.0 }}/{{ item.1 }}"
+    state: directory
+    mode: 0775
+  loop: "{{ environment_directories|product(var_directories)|list }}"
+
+- name: Create nested group_vars files.
+  file:
+    path: "{{ working_path }}/inventories/{{ item.0 }}/group_vars/{{ item.1 }}"
+    state: touch
+    mode: 0644
+  loop: "{{ environment_directories|product(group_vars_files)|list }}"
+
+- name: Create nested host_vars files.
+  file:
+    path: "{{ working_path }}/inventories/{{ item.0 }}/host_vars/{{ item.1 }}"
+    state: touch
+    mode: 0644
+  loop: "{{ environment_directories|product(host_vars_files)|list }}"
