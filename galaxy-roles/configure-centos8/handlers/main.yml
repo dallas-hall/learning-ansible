@@ -1,2 +1,6 @@
 ---
-# handlers file for centos8
+- name: restart nginx
+# https://docs.ansible.com/ansible/latest/modules/service_module.html
+  service:
+    name: nginx
+    state: restarted

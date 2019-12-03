@@ -6,7 +6,12 @@
 - name: My laptop to vagrant VM SSH key.
   import_tasks: deploy-my-public-ssh-key.yml
 
-- name: Intstall & configure Nginx http
-  import_tasks: install-nginx-webserver-http.yml
+# - name: Intstall & configure Nginx http
+#   import_tasks: install-nginx-webserver-http.yml
+#   become: yes
+#   when: inventory_hostname in groups['webservers']
+
+- name: Intstall & configure Nginx https
+  import_tasks: install-nginx-webserver-https.yml
   become: yes
   when: inventory_hostname in groups['webservers']
