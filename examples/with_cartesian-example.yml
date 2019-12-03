@@ -3,21 +3,38 @@
   name: Create an ssh key comment for each user and host.
   become: no
   vars:
-    usernames:
+    ssh_usernames:
       - alice
       - bob
-    hostnames:
+    ssh_hostnames:
       - host01
       - host02
       - host03
-    destination: destination-server
+    ssh_destination: destination-server
+    ssh_id_creation_path: /tmp
+    ssh_id_install_path: "~/.ssh"
+    ssh_id_file_name: "id_{{ ssh_algorithm }}_ambari_cluster"
+    ssh_algorithm: ed25519
 
   tasks:
     - name: Cartesian product of users and hosts for ssh key comments.
       debug: msg="{{ item[0] }}{{ item[1] }}{{ item[2] }}{{ item[3] }}{{ item[4] }}"
       with_cartesian:
-        - "{{ usernames }}"
+        - "{{ ssh_usernames }}"
         - "@"
-        - "{{ hostnames }}"
+        - "{{ ssh_hostnames }}"
         - "->"
-        - "{{ destination }}"
+        - "{{ ssh_destination }}"
+
+    - name: Generate keys.
+      openssh_keypair:
+        path: "{{ ssh_id_creation_path }}/{{ ssh_id_file_name }}"
+        type: "{{ ssh_algorithm }}"
+        #comment: "{{ ssh_comment }}"
+        comment: "{{ item[0] }}{{ item[1] }}{{ item[2] }}{{ item[3] }}{{ item[4] }}"
+        with_cartesian:
+          - "{{ ssh_usernames }}"
+          - "@"
+          - "{{ groups.all }}"
+          - "->"
+          - "{{ ssh_destination }}"

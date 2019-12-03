@@ -1,0 +1,5 @@
+---
+- name: UPDATE ME WITH THE HIGH LEVEL PURPOSE OF THIS PLAYBOOK
+  hosts: localhost # add necessary groups here
+  roles: # add necessary roles here
+    - common
