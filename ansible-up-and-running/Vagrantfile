@@ -24,8 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
-
-  config.ssh.insert_key = false
+  config.ssh.insert_key = false # Use the same ssh key for each node
 	config.vm.boot_timeout
 
   node_counter = 0
@@ -47,8 +46,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # accessing "localhost:8080" will access port 80 on the guest machine.
       # NOTE: This will enable public access to the opened port
       # config.vm.network "forwarded_port", guest: 80, host: 8080
-      nodeconfig.vm.network "forwarded_port", guest: 80, host: 8080
-      nodeconfig.vm.network "forwarded_port", guest: 443, host: 8443
+      nodeconfig.vm.network "forwarded_port", guest: 80, host: node[:http_port]
+      nodeconfig.vm.network "forwarded_port", guest: 443, host: node[:https_port]
 
       # Create a forwarded port mapping which allows access to a specific port
       # within the machine from a port on the host machine and only allow access
