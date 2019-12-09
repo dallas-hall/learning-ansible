@@ -1,4 +1,8 @@
 ---
+- name:
+  import_tasks: register-variables.yml
+  become: no
+    
 - name: .bashrc customisations.
   import_tasks: set-up-bashrc.yml
   become: yes
