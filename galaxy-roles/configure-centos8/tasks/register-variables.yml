@@ -1,0 +1,12 @@
+---
+- name: Save the output of a module task to a variable.
+  # https://docs.ansible.com/ansible/latest/modules/command_module.html
+  # -un returns the usernmae
+  command: id -un
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#registering-variables
+  register: login_name
+# https://docs.ansible.com/ansible/latest/modules/debug_module.html
+- debug:
+    msg: "Logged in as user {{ login_name.stdout }}"
+- debug:
+    var: login_name

@@ -1,3 +1,3 @@
 # Ansible
 
-Ansible examples from when I was learning. Also some Ansible scripts that I use at work and at home.
+This repo contains Ansible related stuff. Stuff I used at home, work, and examples from tutorials I have done.
