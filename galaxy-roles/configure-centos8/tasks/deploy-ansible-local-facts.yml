@@ -1,0 +1,7 @@
+---
+- name: Create /etc/ansible/facts.d
+# https://docs.ansible.com/ansible/latest/modules/template_module.html
+  template:
+    src: templates/ansible-local-facts.j2
+    dest: /etc/ansible/facts.d/example.fact
+    mode: '0644'
