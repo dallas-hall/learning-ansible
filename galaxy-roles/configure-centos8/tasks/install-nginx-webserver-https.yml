@@ -66,8 +66,8 @@
     mode: '0644'
 
 # Handlers doesn't work with vagrant provision, but works with ansible-playbook
-# - name: Restart Nginx
-# # https://docs.ansible.com/ansible/latest/modules/systemd_module.html
-#   systemd:
-#     name: nginx
-#     state: restarted
+- name: Restart Nginx
+# https://docs.ansible.com/ansible/latest/modules/systemd_module.html
+  systemd:
+    name: nginx
+    state: restarted
