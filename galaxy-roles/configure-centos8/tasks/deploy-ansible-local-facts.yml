@@ -1,7 +1,25 @@
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#local-facts-facts-d
 ---
-- name: Create /etc/ansible/facts.d
+- name: Create directories for ansible_local files.
+# https://docs.ansible.com/ansible/latest/modules/file_module.html
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#standard-loops
+  loop:
+    - /etc/ansible/facts.d/
+
+- name: Create /etc/ansible/facts.d/example.fact
 # https://docs.ansible.com/ansible/latest/modules/template_module.html
   template:
     src: templates/ansible-local-facts.j2
     dest: /etc/ansible/facts.d/example.fact
     mode: '0644'
+
+# ansible my-centos-8-vm -m setup -a "filter=ansible_local"
+- name: Print ansible_local
+  become: no
+  debug:
+    msg:
+      - "{{ ansible_local}}"
