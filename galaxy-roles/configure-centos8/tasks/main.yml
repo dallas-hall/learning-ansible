@@ -4,9 +4,12 @@
   become: no
 
 - name:
+  import_tasks: setting-facts.yml
+  become: no
+
+- name:
   import_tasks: deploy-ansible-local-facts.yml
   become: yes
-
 
 - name: .bashrc customisations.
   import_tasks: set-up-bashrc.yml
