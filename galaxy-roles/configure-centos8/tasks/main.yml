@@ -1,5 +1,9 @@
 ---
 - name:
+  import_tasks: command-line-variables.yml
+  become: no
+
+- name:
   import_tasks: register-variables.yml
   become: no
 
