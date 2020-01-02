@@ -7,6 +7,7 @@
   register: login_name
 # https://docs.ansible.com/ansible/latest/modules/debug_module.html
 - debug:
-    msg: "Logged in as user {{ login_name.stdout }}"
-- debug:
+    msg: "Registered variable - logged in as user {{ login_name.stdout }}"
+- name: "The entire variable of login_name"
+  debug:
     var: login_name
