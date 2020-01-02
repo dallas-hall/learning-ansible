@@ -1,0 +1,108 @@
+---
+- hosts: laptops
+  name: Create .vimrc files for local user and root.
+  become: yes
+
+  tasks:
+  - name: Create user .vimrc file
+    file:
+      path: /home/blindcant/.vimrc
+      owner: blindcant
+      group: blindcant
+      mode: 0644
+      state: touch
+
+  - name: Create user .vimrc file
+    file:
+      path: /root/.vimrc
+      owner: root
+      group: root
+      mode: 0644
+      state: touch
+
+  - name: Adding customisations to the /home/vagrant/.vimrc file
+    blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+      owner: blindcant
+      group: blindcant
+      mode: 0644
+      path: /home/blindcant/.vimrc
+      block: |
+        " Set 'nocompatible' to ward off unexpected things that your distro might
+        " have made, as well as sanely reset options when re-sourcing .vimrc
+        set nocompatible
+
+        " Display line numbers on the left
+        set number
+
+        " Enable syntax & search highlighting
+        syntax on
+        set hlsearch
+
+        " Attempt to determine the type of a file based on its name and possibly
+        " its contents. Use this to allow intelligent auto-indenting for each filetype,
+        " and for plugins that are filetype specific.
+        filetype plugin indent on
+
+        " When opening a new line and no filetype-specific indenting is enabled, keep
+        " the same indent as the line you're currently on. Useful for READMEs, etc.
+        set autoindent
+
+        " Indentation settings for using hard tabs for indent. Display tabs as
+        " four characters wide.
+        set shiftwidth=4
+        set tabstop=4
+
+        " show the cursor position at all times
+        set ruler
+
+        " enable mouse if possible
+        if has('mouse')
+          set mouse=a
+        endif
+
+        "set the color to something more readable
+        :color ron
+
+
+  - name: Adding customisations to the /root/.vimrc file
+    blockinfile: # https://docs.ansible.com/ansible/latest/modules/blockinfile_module.html
+      owner: root
+      group: root
+      mode: 0644
+      path: /root/.vimrc
+      block: |
+        " Set 'nocompatible' to ward off unexpected things that your distro might
+        " have made, as well as sanely reset options when re-sourcing .vimrc
+        set nocompatible
+
+        " Display line numbers on the left
+        set number
+
+        " Enable syntax & search highlighting
+        syntax on
+        set hlsearch
+
+        " Attempt to determine the type of a file based on its name and possibly
+        " its contents. Use this to allow intelligent auto-indenting for each filetype,
+        " and for plugins that are filetype specific.
+        filetype plugin indent on
+
+        " When opening a new line and no filetype-specific indenting is enabled, keep
+        " the same indent as the line you're currently on. Useful for READMEs, etc.
+        set autoindent
+
+        " Indentation settings for using hard tabs for indent. Display tabs as
+        " four characters wide.
+        set shiftwidth=4
+        set tabstop=4
+
+        " show the cursor position at all times
+        set ruler
+
+        " enable mouse if possible
+        if has('mouse')
+          set mouse=a
+        endif
+
+        "set the color to something more readable
+        :color ron

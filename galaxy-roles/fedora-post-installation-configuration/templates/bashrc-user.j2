@@ -21,8 +21,11 @@ alias docs='cd ~/Documents'
 {% if laptop %}
 alias dev2='cd /media/data-hdd/Development'
 alias data='cd /media/data-hdd'
-alias load-conda-bashrc='source ~/.conda-bashrc'
+{% elif desktop %}
+alias dev2='cd /media/veracrypt1/Development'
+alias data='cd /media/veracrypt2'
 {% endif %}
+alias load-conda-bashrc='source ~/.conda-bashrc'
 
 #custom ls aliases
 #full details on everything
@@ -59,7 +62,7 @@ shopt -s histappend
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 #increase history size
-export HISTSIZE=9999
+export HISTSIZE=99999
 
 #allow vim commands in bash
 set -o vi
@@ -79,22 +82,15 @@ export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk"
 export ANSIBLE_ROLES_PATH="/home/blindcant/Development/paas/galaxy-roles"
 {% elif desktop %}
 export ANSIBLE_ROLES_PATH="/home/blindcant/Development/ansible/galaxy-roles"
+#export ANSIBLE_ROLES_PATH="/home/blindcant/Development/paas/galaxy-roles"
 {% endif %}
 
-{% if laptop %}
 # https://www.vagrantup.com/docs/other/environmental-variables.html#vagrant_home
+{% if laptop %}
 export VAGRANT_HOME="/media/data-hdd/Development/vagrant"
 export VAGRANT_DOTFILE_PATH="/media/data-hdd/Development"
 {% elif desktop %}
-export VAGRANT_HOME="/media/veracrypt2/Development/vagrant"
-export VAGRANT_DOTFILE_PATH="/media/veracrypt2/Development"
+export VAGRANT_HOME="/media/veracrypt1/Development/vagrant"
+export VAGRANT_DOTFILE_PATH="/media/veracrypt1/Development"
 {% endif %}
 VAGRANT_DEFAULT_PROVIDER='virtualbox'
-
-# https://fedoraproject.org/wiki/Atom
-ATOM_INSTALLED_VERSION=$(rpm -qi atom | grep "Version" |  cut -d ':' -f 2 | cut -d ' ' -f 2)
-ATOM_LATEST_VERSION=$(curl -sL "https://api.github.com/repos/atom/atom/releases/latest" | grep -E "https.*atom-amd64.tar.gz" | cut -d '"' -f 4 | cut -d '/' -f 8 | sed 's/v//g')
-
-if [[ $ATOM_INSTALLED_VERSION < $ATOM_LATEST_VERSION ]]; then
-  sudo dnf install -y https://github.com/atom/atom/releases/download/v${ATOM_LATEST_VERSION}/atom.x86_64.rpm
-fi

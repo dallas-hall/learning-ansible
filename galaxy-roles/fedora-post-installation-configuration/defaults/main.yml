@@ -1,6 +1,6 @@
 ---
 # defaults file for fedora
-fedora_current: 30
+fedora_current: 31
 username: blindcant
 laptop: True
 desktop: False
