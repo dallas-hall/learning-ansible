@@ -8,6 +8,11 @@
   become: no
 
 - name:
+  import_tasks: ansible-built-in-variables.yml
+  become: no
+  when: print_built_ins
+
+- name:
   import_tasks: deploy-ansible-local-facts.yml
   become: yes
 

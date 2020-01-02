@@ -1,0 +1,5 @@
+---
+# https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html#magic
+- name: Printing the Ansible built in variable host_var
+  debug:
+    var: hostvars
