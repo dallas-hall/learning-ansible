@@ -4,7 +4,7 @@
   become: yes
   gather_facts: yes
   roles:
-    - configure-centos8
+    - ansible-up-and-running
 
 # https://docs.ansible.com/ansible/latest/modules/yum_module.html
 # - name: Update the system & reboot.
