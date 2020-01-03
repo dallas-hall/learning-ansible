@@ -1,0 +1,21 @@
+---
+- name: Configure CentOS 8
+  hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - mezzanine-example
+
+# https://docs.ansible.com/ansible/latest/modules/yum_module.html
+# - name: Update the system & reboot.
+#   hosts: all
+#   become: yes
+#   tasks:
+#     - name: yum update the cluster.
+#       yum:
+#         name: '*'
+#         state: latest
+#     - name: Reboot after update.
+#       reboot:
+#   # Do one machine at a time so downloads are quicker. - https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html#rolling-update-batch-size
+#   serial: 1
