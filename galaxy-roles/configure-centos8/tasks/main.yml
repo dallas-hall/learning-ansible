@@ -27,6 +27,9 @@
 - name: My laptop to vagrant VM SSH key.
   import_tasks: deploy-my-public-ssh-key.yml
 
+- name: Install Python3.
+  import_tasks: install-python3.yml
+
 # - name: Intstall & configure Nginx http
 #   import_tasks: install-nginx-webserver-http.yml
 #   become: yes
