@@ -1,0 +1,11 @@
+---
+  # https://docs.ansible.com/ansible/latest/modules/yum_module.html
+  # https://docs.ansible.com/ansible/latest/modules/dnf_module.html
+  - name: Upgrade all packages.
+    dnf:
+      name: '*'
+      state: latest
+
+  # https://docs.ansible.com/ansible/latest/modules/reboot_module.html
+  - name: Reboot after upgrade.
+    reboot:
