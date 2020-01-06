@@ -1,0 +1,4 @@
+---
+- name: Install the system packages required by Mezzanine.
+  import_tasks: install-required-system-packages.yml
+  become: yes
