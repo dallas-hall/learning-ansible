@@ -5,7 +5,12 @@
 
 - name: My laptop to vagrant VM SSH key.
   import_tasks: deploy-my-public-ssh-key.yml
+  become: no
 
 - name: Install Python 3.
   import_tasks: install-python3.yml
+  become: yes
+
+- name: Upgrade all packages.
+  import_tasks: update-centos.yml
   become: yes
