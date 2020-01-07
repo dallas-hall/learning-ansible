@@ -1,26 +1,16 @@
 ---
-- name:
-  import_tasks: register-variables.yml
-  become: no
-
-- name:
-  import_tasks: deploy-ansible-local-facts.yml
-  become: yes
-
-
 - name: .bashrc customisations.
   import_tasks: set-up-bashrc.yml
   become: yes
 
 - name: My laptop to vagrant VM SSH key.
   import_tasks: deploy-my-public-ssh-key.yml
+  become: no
 
-# - name: Intstall & configure Nginx http
-#   import_tasks: install-nginx-webserver-http.yml
-#   become: yes
-#   when: inventory_hostname in groups['webservers']
-
-- name: Intstall & configure Nginx https
-  import_tasks: install-nginx-webserver-https.yml
+- name: Install Python 3.
+  import_tasks: install-python3.yml
   become: yes
-  when: inventory_hostname in groups['webservers']
+
+- name: Upgrade all packages.
+  import_tasks: update-centos.yml
+  become: yes

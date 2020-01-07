@@ -1,0 +1,18 @@
+---
+- name: Install the system packages required by Mezzanine.
+  # https://docs.ansible.com/ansible/latest/modules/package_module.html?highlight=package%20management
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - git
+    - libjpeg-turbo-devel
+    - libpq-devel
+    - memcached
+    - nginx
+    - postgresql
+    - platform-python-devel
+    - platform-python-setuptools
+    - python3-virtualenv
+    - python3-psycopg2
+    # - supervisor # Not needed as we will use systemctl

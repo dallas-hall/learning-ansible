@@ -1,0 +1,41 @@
+---
+- name:
+  import_tasks: command-line-variables.yml
+  become: no
+
+- name:
+  import_tasks: register-variables.yml
+  become: no
+
+- name:
+  import_tasks: setting-facts.yml
+  become: no
+
+- name:
+  import_tasks: ansible-built-in-variables.yml
+  become: no
+  when: print_built_ins
+
+- name:
+  import_tasks: deploy-ansible-local-facts.yml
+  become: yes
+
+- name: .bashrc customisations.
+  import_tasks: set-up-bashrc.yml
+  become: yes
+
+- name: My laptop to vagrant VM SSH key.
+  import_tasks: deploy-my-public-ssh-key.yml
+
+- name: Install Python3.
+  import_tasks: install-python3.yml
+
+# - name: Intstall & configure Nginx http
+#   import_tasks: install-nginx-webserver-http.yml
+#   become: yes
+#   when: inventory_hostname in groups['webservers']
+
+- name: Intstall & configure Nginx https
+  import_tasks: install-nginx-webserver-https.yml
+  become: yes
+  when: inventory_hostname in groups['webservers']

@@ -1,10 +1,11 @@
 ---
 - name: Configure CentOS 8
   hosts: all
-  become: yes
+  become: no
   gather_facts: yes
   roles:
     - configure-centos8
+    - mezzanine-example
 
 # https://docs.ansible.com/ansible/latest/modules/yum_module.html
 # - name: Update the system & reboot.
