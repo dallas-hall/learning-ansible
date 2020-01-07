@@ -1,0 +1,13 @@
+---
+# https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html#magic
+- name: Printing the Ansible built in variable host_var
+  debug:
+    var: hostvars
+
+- name: Printing the Ansible built in variable inventory_hostname
+  debug:
+    var: inventory_hostname
+
+- name: Printing the Ansible built in variable hostvars[inventory_hostname].ansible_eth1.ipv4.address 
+  debug:
+    var: hostvars[inventory_hostname].ansible_eth1.ipv4.address 

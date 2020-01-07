@@ -120,7 +120,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         nodeconfig.vm.provision :ansible do |ansible|
           #ansible.inventory_path = "inventories/dev-test/hosts.ini"
 					ansible.inventory_path = "inventories/hosts.yml"
-          ansible.playbook = "master-playbook.yml"
+          #ansible.playbook = "generic-playbook.yml"
+          ansible.playbook = "mezzanine-playbook.yml"
           ansible.become = true
           ansible.become_user = 'root'
           ansible.limit = "all"

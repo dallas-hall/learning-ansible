@@ -1,0 +1,6 @@
+---
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#passing-variables-on-the-command-line
+- name: Passing in cli variables, which can overwrite existing variables.
+  vars:
+    my_msg: "No message was supplied. Use ansible-playbook playbook.yml -e my_msg='Message to override with.'"
+  debug: msg="{{ my_msg }}"

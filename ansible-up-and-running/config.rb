@@ -3,11 +3,24 @@
 #
 #     cp vagrant/example_config.rb vagrant/config.rb
 
-# One vm
+# One generic vm
+# $nodes = [
+#   {
+#     :hostname => 'my-centos-8-vm',
+#     :ip => '172.16.2.10',
+#     :cpus => 4,
+#     :memory => '4096',
+#     :http_port => 8080,
+#     :https_port => 8443,
+#     :groups => ['centos8']
+#   }
+# ]
+
+# One Mezzanine vm
 $nodes = [
   {
-    :hostname => 'my-centos-8-vm',
-    :ip => '172.16.2.10',
+    :hostname => 'mezzanine-server',
+    :ip => '172.16.2.14',
     :cpus => 4,
     :memory => '4096',
     :http_port => 8080,
