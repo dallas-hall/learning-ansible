@@ -1,0 +1,6 @@
+---
+- name: Clone the mezzanine_example repo.
+# https://docs.ansible.com/ansible/latest/modules/git_module.html
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ clone_path }}"
