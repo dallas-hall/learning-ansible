@@ -2,3 +2,7 @@
 - name: Install the system packages required by Mezzanine.
   import_tasks: install-required-system-packages.yml
   become: yes
+
+- name: Install the pip packages required by Mezzanine.
+  import_tasks: install-pip-packages-into-venv.yml
+  become: yes
