@@ -6,6 +6,7 @@
     dnf:
       name: '*'
       state: latest
+      update_cache: yes
     register: upgrade_result
 
   # https://docs.ansible.com/ansible/latest/modules/reboot_module.html
