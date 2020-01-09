@@ -1,0 +1,30 @@
+---
+# https://docs.ansible.com/ansible/latest/modules/timezone_module.html
+- name: Set timezone to {{ desired_timezone }}.
+  timezone:
+    name: "{{ desired_timezone }}"
+
+#- name: Update timezone to {{ timezone }}.
+#  command: timedatectl set-timezone "{{ timezone }}"
+
+# https://docs.ansible.com/ansible/latest/modules/locale_gen_module.html
+# https://serverfault.com/a/981742
+# Failing due to command 'locales' not present as CentOS using localectl
+# - name: Ensure {{ desired_locale }} locale exists
+#   locale_gen:
+#     name: "{{ desired_locale }}"
+#     state: present
+
+- name: Check if the desired locale {{ desired_locale }} is set.
+  command: localectl status
+  register: locale_status
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#overriding-the-changed-result
+  changed_when: False # Turning off the reporting that something has changed.
+
+- name: Parse out the current locale.
+  set_fact:
+    current_locale: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+- name: Update language to {{ desired_locale }}.
+  command: localectl set-locale LANG="{{ desired_locale }}"
+  changed_when: current_locale != desired_locale
