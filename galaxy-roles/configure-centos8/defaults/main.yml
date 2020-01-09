@@ -1,2 +1,4 @@
 ---
 username: vagrant
+desired_timezone: Australia/Sydney
+desired_locale: en_AU.UTF-8
