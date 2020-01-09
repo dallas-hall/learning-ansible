@@ -5,7 +5,7 @@
   - name: Install the "Development Tools" group.
     dnf:
       name: '@Development tools'
-      state: latest
+      state: present # Having latest here is causing a crash after it is installed.
     register: install_result
 
   # https://docs.ansible.com/ansible/latest/modules/reboot_module.html
