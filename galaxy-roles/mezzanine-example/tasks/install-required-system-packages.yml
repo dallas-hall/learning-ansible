@@ -10,7 +10,7 @@
     - libpq-devel
     - memcached
     - nginx
-    - postgresql
+    #- postgresql # Covered by install-postgresql.yml task.
     - platform-python-devel
     - platform-python-setuptools
     - python3-virtualenv

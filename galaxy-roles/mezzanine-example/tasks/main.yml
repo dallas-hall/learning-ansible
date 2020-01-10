@@ -6,3 +6,7 @@
 - name: Install the pip packages required by Mezzanine.
   import_tasks: install-pip-packages-into-venv.yml
   become: yes
+
+- name: Install PostgreSQL.
+  import_tasks: install-postgresql.yml
+  become: yes

@@ -1,5 +1,6 @@
 ---
-- debug:
+- name: Display some variable values.
+  debug:
     msg:
       - "home_path is {{ home_path }}"
       - "venv_path is {{ venv_path }}"
