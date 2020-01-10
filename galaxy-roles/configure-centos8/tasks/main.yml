@@ -1,4 +1,8 @@
 ---
+- name: Refresh cache and upgrade all packages.
+  import_tasks: update-centos.yml
+  become: yes
+
 - name: .bashrc customisations.
   import_tasks: set-up-bashrc.yml
   become: yes
@@ -17,8 +21,4 @@
 
 - name: Install "Development Tools" group.
   import_tasks: install-development-tools-group.yml
-  become: yes
-
-- name: Upgrade all packages.
-  import_tasks: update-centos.yml
   become: yes
