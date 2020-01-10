@@ -10,3 +10,18 @@ repo_clone_path: "{{ home_path }}/{{ project name }}"
 venv_name: mezzanine
 venv_path: "{{ home_path }}/.venv"
 requirements_path: files/requirements.txt
+# PostgreSQL
+# CentOS 8 has PostgreSQL 10 - https://www.postgresql.org/docs/10/index.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
+db_locale: en_AU
+db_name: mezzanine
+db_schema: mezzanine
+db_user: postgres
+db_password: abc123
+db_encoding: UTF-8
+# https://www.postgresql.org/docs/10/collation.html
+db_lc_collate: "{{ db_locale  }}.{{ db_encoding }}"
+db_lc_ctype: "{{ db_lc_collate }}"
+db_template: template0

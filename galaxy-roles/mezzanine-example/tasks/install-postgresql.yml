@@ -1,0 +1,17 @@
+---
+# PostgreSQL
+# CentOS 8 has PostgreSQL 10 - https://www.postgresql.org/docs/10/index.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
+- name: Install default PostgreSQL package, CentOS 8 has PostgreSQL 10.
+  # https://docs.ansible.com/ansible/latest/modules/package_module.html?highlight=package%20management
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - postgresql-server
+    - postgresql
+    - postgresql-docs
+    - postgresql-odbc
+    - postgresql-jdbc
