@@ -15,11 +15,16 @@ requirements_path: files/requirements.txt
 # https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
+db_version: "9.2"
+db_data_dir: "/var/lib/pgsql/data"
+db_bin_path: "/usr/bin"
+db_config_path: "/var/lib/pgsql/data"
+db_daemon: postgresql
 db_locale: en_AU
 db_name: mezzanine
 db_schema: mezzanine
-db_user: postgres
-db_password: abc123
+db_user: mezzanine
+db_password: abc123 #TODO - move to Ansible Vault
 db_encoding: UTF-8
 # https://www.postgresql.org/docs/10/collation.html
 db_lc_collate: "{{ db_locale  }}.{{ db_encoding }}"
