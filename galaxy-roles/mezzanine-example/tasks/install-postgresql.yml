@@ -1,8 +1,6 @@
 ---
 # PostgreSQL
 # CentOS 8 has PostgreSQL 10 - https://www.postgresql.org/docs/10/index.html
-# https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
-# https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
 - name: Install default PostgreSQL package, CentOS 8 has PostgreSQL 10.
   # https://docs.ansible.com/ansible/latest/modules/package_module.html?highlight=package%20management
@@ -15,3 +13,66 @@
     - postgresql-docs
     - postgresql-odbc
     - postgresql-jdbc
+    - postgresql-contrib
+
+#- name: Start the database service.
+#pg_ctl init -D /var/lib/pgsql/data -l serverlog
+#pg_ctl start -D /var/lib/pgsql/data -l serverlog
+
+# https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
+- name: Create the database.
+  postgresql_db:
+    name: "{{ db_name }}"
+    encoding: "{{ db_encoding }}"
+    lc_collate: "{{ db_lc_collate }}"
+    lc_ctype: "{{ db_lc_ctype }}"
+    template: "{{ db_template }}"
+
+# https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
+# https://www.postgresql.org/docs/10/sql-createrole.html
+- name: Create a read database role.
+  postgresql_user:
+    db: "{{ db_name }}"
+    name: "read_{{ db_user }}"
+    role_attr_flags: NOLOGIN
+    # # https://www.postgresql.org/docs/10/sql-grant.html
+  become: True
+  become_user: postgres
+
+# https://docs.ansible.com/ansible/latest/modules/postgresql_privs_module.html  
+- name: GRANT USAGE, SELECT on {{ db_schema }} TO read_{{ db_user }}
+  postgresql_privs:
+    database: "{{ db_name }}"
+    state: present
+    privs: USAGE,SELECT
+    type: schema
+    objs: "{{ db_schema }}"
+    roles: "read_{{ db_user }}"
+    grant_option: yes
+
+- name: Create an update database role.
+  postgresql_user:
+    db: "{{ db_name }}"
+    name: "update_{{ db_user }}"
+    role_attr_flags: NOLOGIN
+  become: True
+  become_user: postgres
+
+- name: Create an admin database role.
+  postgresql_user:
+    db: "{{ db_name }}"
+    name: "dba_{{ db_user }}"
+    role_attr_flags: NOLOGIN
+  become: True
+  become_user: postgres
+
+- name: Grant roles to a user.
+  postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    groups:
+      #- "read_{{ db_user }}"
+      #- "update_{{ db_user }}"
+      - "dba_{{ db_user }}"
+  become: True
+  become_user: postgres
