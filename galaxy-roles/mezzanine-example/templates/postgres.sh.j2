@@ -1,0 +1,24 @@
+export PGDATA={{ postgresql_data_dir }}
+export PATH=$PATH:{{ postgresql_bin_path }}
+
+## Added from /opt/rh/rh-postgresql10/enable
+## For binaries
+#export PATH=/opt/rh/rh-postgresql10/root/usr/bin${PATH:+:$PATH}
+#
+## For header files
+#export CPATH=/opt/rh/rh-postgresql10/root/usr/include${CPATH:+:$CPATH}
+#
+## For libraries during build
+#export LIBRARY_PATH=/opt/rh/rh-postgresql10/root/usr/lib64${LIBRARY_PATH:+:$LIBRARY_PATH}
+#
+## For libraries during linking
+#export LD_LIBRARY_PATH=/opt/rh/rh-postgresql10/root/usr/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+#
+## For man pages; empty field makes man to consider also standard path
+#export MANPATH=/opt/rh/rh-postgresql10/root/usr/share/man:$MANPATH
+#
+## For Java Packages Tools to locate java.conf
+#export JAVACONFDIRS=/etc/opt/rh/rh-postgresql10/java:${JAVACONFDIRS:-/etc/java}
+#
+## For pkg-config
+#export PKG_CONFIG_PATH=/opt/rh/rh-postgresql10/root/usr/lib64/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
