@@ -15,11 +15,6 @@ requirements_path: files/requirements.txt
 # https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
-db_version: "9.2"
-db_data_dir: "/var/lib/pgsql/data"
-db_bin_path: "/usr/bin"
-db_config_path: "/var/lib/pgsql/data"
-db_daemon: postgresql
 db_locale: en_AU
 db_name: mezzanine
 db_schema: mezzanine
@@ -30,3 +25,22 @@ db_encoding: UTF-8
 db_lc_collate: "{{ db_locale  }}.{{ db_encoding }}"
 db_lc_ctype: "{{ db_lc_collate }}"
 db_template: template0
+
+# TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
+postgresql_user: postgres
+postgresql_group: postgres
+# Set postgresql state when configuration changes are made. Recommended values:
+# `restarted` or `reloaded`
+postgresql_restarted_state: "restarted"
+postgresql_version: "10"
+postgresql_data_dir: "/var/lib/pgsql/data"
+postgresql_bin_path: "/usr/bin"
+postgresql_config_path: "/var/lib/pgsql/data"
+postgresql_daemon: postgresql
+postgresql_packages:
+  - postgresql
+  - postgresql-server
+  - postgresql-contrib
+  #- postgresql-libs # Doesn't exist in CentOS 8
+  - postgresql-jdbc* # /usr/share/java/postgresql-jdbc.jar
+  - postgresql-odbc # I added in just in case we want to use it

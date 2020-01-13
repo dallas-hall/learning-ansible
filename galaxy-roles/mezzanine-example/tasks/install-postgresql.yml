@@ -5,19 +5,44 @@
 - name: Install default PostgreSQL package, CentOS 8 has PostgreSQL 10.
   # https://docs.ansible.com/ansible/latest/modules/package_module.html?highlight=package%20management
   package:
-    name: "{{ item }}"
+    name: "{{ postgresql_packages }}"
     state: latest
-  with_items:
-    - postgresql-server
-    - postgresql
-    - postgresql-docs
-    - postgresql-odbc
-    - postgresql-jdbc
-    - postgresql-contrib
 
-#- name: Start the database service.
+# TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
+- name: Set PostgreSQL environment variables.
+  template:
+    src: postgres.sh.j2
+    dest: /etc/profile.d/postgres.sh
+    mode: 0644
+  notify: restart postgresql
+
+- name: Ensure PostgreSQL data directory exists.
+  file:
+    path: "{{ postgresql_data_dir }}"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    state: directory
+    mode: 0700
+
+- name: Check if PostgreSQL database is initialized.
+  stat:
+    path: "{{ postgresql_data_dir }}/PG_VERSION"
+  register: pgdata_dir_version
+
+- name: Ensure PostgreSQL database server is initialized.
+  command: "{{ postgresql_bin_path }}/pg_ctl init -D {{ postgresql_data_dir }}"
+  when: not pgdata_dir_version.stat.exists
+  become: true
+  become_user: "{{ postgresql_user }}"
 #pg_ctl init -D /var/lib/pgsql/data -l serverlog
 #pg_ctl start -D /var/lib/pgsql/data -l serverlog
+  notify: restart postgresql
+  
+- name: Ensure PostgreSQL database server is running.
+  command: "{{ postgresql_bin_path }}/pg_ctl restart -D {{ postgresql_data_dir }}"
+  become: true
+  become_user: "{{ postgresql_user }}"
+  notify: restart postgresql
 
 # https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
 - name: Create the database.
@@ -28,6 +53,12 @@
     lc_ctype: "{{ db_lc_ctype }}"
     template: "{{ db_template }}"
 
+# https://docs.ansible.com/ansible/latest/modules/postgresql_schema_module.html
+- name: Create the schema.
+  postgresql_schema:
+    database: "{{ db_name }}"
+    name: "{{ db_schema }}"
+
 # https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
 # https://www.postgresql.org/docs/10/sql-createrole.html
 - name: Create a read database role.
@@ -35,19 +66,30 @@
     db: "{{ db_name }}"
     name: "read_{{ db_user }}"
     role_attr_flags: NOLOGIN
-    # # https://www.postgresql.org/docs/10/sql-grant.html
   become: True
   become_user: postgres
 
 # https://docs.ansible.com/ansible/latest/modules/postgresql_privs_module.html  
-- name: GRANT USAGE, SELECT on {{ db_schema }} TO read_{{ db_user }}
+# https://www.postgresql.org/docs/10/sql-alterdefaultprivileges.html
+- name: ALTER DEFAULT PRIVILEGES IN SCHEMA {{ db_schema }} GRANT SELECT ON TABLES TO read_{{ db_user }}
   postgresql_privs:
     database: "{{ db_name }}"
     state: present
-    privs: USAGE,SELECT
+    privs: SELECT
+    type: default_privs
+    objs: TABLES
+    role: "read_{{ db_user }}"
+    grant_option: yes
+
+# https://www.postgresql.org/docs/10/sql-grant.html
+- name: GRANT USAGE ON SCHEMA {{ db_schema }} TO read_{{ db_user }}
+  postgresql_privs:
+    database: "{{ db_name }}"
+    state: present
+    privs: USAGE
     type: schema
     objs: "{{ db_schema }}"
-    roles: "read_{{ db_user }}"
+    role: "read_{{ db_user }}"
     grant_option: yes
 
 - name: Create an update database role.
@@ -58,21 +100,52 @@
   become: True
   become_user: postgres
 
+- name: ALTER DEFAULT PRIVILEGES IN SCHEMA {{ db_schema }} GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE ON TABLES TO update_{{ db_user }}
+  postgresql_privs:
+    database: "{{ db_name }}"
+    state: present
+    privs: SELECT,INSERT,UPDATE,DELETE,TRUNCATE
+    type: default_privs
+    objs: TABLES
+    role: "update_{{ db_user }}"
+    grant_option: yes
+
+- name: GRANT USAGE, CREATE ON SCHEMA {{ db_schema }} TO update_{{ db_user }}
+  postgresql_privs:
+    database: "{{ db_name }}"
+    state: present
+    privs: USAGE
+    type: schema
+    objs: "{{ db_schema }}"
+    role: "update_{{ db_user }}"
+    grant_option: yes
+
 - name: Create an admin database role.
   postgresql_user:
     db: "{{ db_name }}"
     name: "dba_{{ db_user }}"
-    role_attr_flags: NOLOGIN
+    password: "{{ db_password }}"
+    role_attr_flags: LOGIN,SUPERUSER,CREATEROLE
   become: True
   become_user: postgres
 
-- name: Grant roles to a user.
-  postgresql_user:
-    name: "{{ db_user }}"
-    password: "{{ db_password }}"
-    groups:
-      #- "read_{{ db_user }}"
-      #- "update_{{ db_user }}"
-      - "dba_{{ db_user }}"
-  become: True
-  become_user: postgres
+- name: ALTER DEFAULT PRIVILEGES IN SCHEMA {{ db_schema }} GRANT ALL TO dba_{{ db_user }}
+  postgresql_privs:
+    database: "{{ db_name }}"
+    state: present
+    privs: ALL
+    type: default_privs
+    objs: ALL_DEFAULT
+    role: "dba_{{ db_user }}"
+    grant_option: yes
+
+# - name: Grant roles to a user.
+#   postgresql_user:
+#     name: "{{ db_user }}"
+#     password: "{{ db_password }}"
+#     groups:
+#       #- "read_{{ db_user }}"
+#       #- "update_{{ db_user }}"
+#       - "dba_{{ db_user }}"
+#   become: True
+#   become_user: postgres

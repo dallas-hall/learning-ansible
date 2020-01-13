@@ -1,2 +1,8 @@
 ---
-# handlers file for mezzanine-example
+# TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
+# Currently not working as postgres.service isn't being used, we are using pg_ctl instead
+- name: restart postgresql
+  service:
+    name: "{{ postgresql_daemon }}"
+    state: "{{ postgresql_restarted_state }}"
+    #sleep: 5
