@@ -1,0 +1,105 @@
+# https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
+- name: Create the database.
+  postgresql_db:
+    name: "{{ postgresql_database_name }}"
+    encoding: "{{ postgresql_encoding }}"
+    lc_collate: "{{ postgresql_lc_collate }}"
+    lc_ctype: "{{ postgresql_lc_ctype }}"
+    template: "{{ postgresql_template }}"
+
+# https://docs.ansible.com/ansible/latest/modules/postgresql_schema_module.html
+- name: Create the schema.
+  postgresql_schema:
+    database: "{{ postgresql_database_name }}"
+    name: "{{ postgresql_schema_name }}"
+
+# https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
+# https://www.postgresql.org/docs/10/sql-createrole.html
+- name: Create a read database role.
+  postgresql_user:
+    db: "{{ postgresql_database_name }}"
+    name: "read_{{ postgresql_app_user }}"
+    role_attr_flags: NOLOGIN
+  become: True
+  become_user: postgres
+
+# https://docs.ansible.com/ansible/latest/modules/postgresql_privs_module.html  
+# https://www.postgresql.org/docs/10/sql-alterdefaultprivileges.html
+- name: ALTER DEFAULT PRIVILEGES IN SCHEMA {{ postgresql_schema_name }} GRANT SELECT ON TABLES TO read_{{ postgresql_app_user }}
+  postgresql_privs:
+    database: "{{ postgresql_database_name }}"
+    state: present
+    privs: SELECT
+    type: default_privs
+    objs: TABLES
+    role: "read_{{ postgresql_app_user }}"
+    grant_option: yes
+
+# https://www.postgresql.org/docs/10/sql-grant.html
+- name: GRANT USAGE ON SCHEMA {{ postgresql_schema_name }} TO read_{{ postgresql_app_user }}
+  postgresql_privs:
+    database: "{{ postgresql_database_name }}"
+    state: present
+    privs: USAGE
+    type: schema
+    objs: "{{ postgresql_schema_name }}"
+    role: "read_{{ postgresql_app_user }}"
+    grant_option: yes
+
+- name: Create an update database role.
+  postgresql_user:
+    db: "{{ postgresql_database_name }}"
+    name: "update_{{ postgresql_app_user }}"
+    role_attr_flags: NOLOGIN
+  become: True
+  become_user: postgres
+
+- name: ALTER DEFAULT PRIVILEGES IN SCHEMA {{ postgresql_schema_name }} GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE ON TABLES TO update_{{ postgresql_app_user }}
+  postgresql_privs:
+    database: "{{ postgresql_database_name }}"
+    state: present
+    privs: SELECT,INSERT,UPDATE,DELETE,TRUNCATE
+    type: default_privs
+    objs: TABLES
+    role: "update_{{ postgresql_app_user }}"
+    grant_option: yes
+
+- name: GRANT USAGE, CREATE ON SCHEMA {{ postgresql_schema_name }} TO update_{{ postgresql_app_user }}
+  postgresql_privs:
+    database: "{{ postgresql_database_name }}"
+    state: present
+    privs: USAGE
+    type: schema
+    objs: "{{ postgresql_schema_name }}"
+    role: "update_{{ postgresql_app_user }}"
+    grant_option: yes
+
+- name: Create an admin database role.
+  postgresql_user:
+    db: "{{ postgresql_database_name }}"
+    name: "dba_{{ postgresql_app_user }}"
+    password: "{{ postgresql_app_user_password }}"
+    role_attr_flags: LOGIN,SUPERUSER,CREATEROLE
+  become: True
+  become_user: postgres
+
+- name: ALTER DEFAULT PRIVILEGES IN SCHEMA {{ postgresql_schema_name }} GRANT ALL TO dba_{{ postgresql_app_user }}
+  postgresql_privs:
+    database: "{{ postgresql_database_name }}"
+    state: present
+    privs: ALL
+    type: default_privs
+    objs: ALL_DEFAULT
+    role: "dba_{{ postgresql_app_user }}"
+    grant_option: yes
+
+# - name: Grant roles to a user.
+#   postgresql_user:
+#     name: "{{ postgresql_app_user }}"
+#     password: "{{ postgresql_app_user_password }}"
+#     groups:
+#       #- "read_{{ postgresql_app_user }}"
+#       #- "update_{{ postgresql_app_user }}"
+#       - "dba_{{ postgresql_app_user }}"
+#   become: True
+#   become_user: postgres
