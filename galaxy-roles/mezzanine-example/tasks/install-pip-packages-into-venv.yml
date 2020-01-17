@@ -3,8 +3,9 @@
   debug:
     msg:
       - "home_path is {{ home_path }}"
-      - "venv_path is {{ venv_path }}"
+      - "venv_base_path is {{ venv_base_path }}"
       - "venv_name is {{ venv_name }}"
+      - "venv_project_path is {{ venv_project_path }}"
 
 # https://docs.ansible.com/ansible/latest/modules/pip_module.html
 - name: Install required Python pip packages into the Python venv.
@@ -13,7 +14,7 @@
     name: ["pip", "virtualenv", "virtualenvwrapper"]
     state: latest
     # If the venv doesn't exist, create it.
-    virtualenv: "{{ venv_path }}/{{ venv_name }}"
+    virtualenv: "{{ venv_project_path }}"
 
 - name: Copy requirements.txt to Ansible TARGET.
   copy: 
@@ -26,10 +27,10 @@
 - name: Install Mezzanine.
   pip:
     requirements: "{{ home_path }}/requirements.txt"
-    virtualenv: "{{ venv_path }}/{{ venv_name }}"
+    virtualenv: "{{ venv_project_path }}"
 
 - name: Install required project pip packages into the Python venv.
   pip:
     name: ["gunicorn", "psycopg2", "django-compressor", "python-memcached"]
     state: latest
-    virtualenv: "{{ venv_path }}/{{ venv_name }}"
+    virtualenv: "{{ venv_project_path }}"
