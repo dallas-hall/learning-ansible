@@ -1,31 +1,36 @@
 ---
+debugging: True
 username: vagrant
 # https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-access-shell-environment-variables
 home_path: "{{ ansible_env.HOME }}"
 project_name: mezzanine_example
+project_path: "{{ home_path }}/{{ project_name }}"
+
 # git
 repo_url: https://github.com/ansiblebook/mezzanine_example
-repo_clone_path: "{{ home_path }}/{{ project name }}"
+repo_clone_path: "{{ project_path }}"
+
 # Python
+venv_base_path: "{{ home_path }}/.venv"
 venv_name: mezzanine
-venv_path: "{{ home_path }}/.venv"
+venv_project_path: "{{ venv_base_path }}/{{ venv_name }}"
 requirements_path: files/requirements.txt
+
 # PostgreSQL
 # CentOS 8 has PostgreSQL 10 - https://www.postgresql.org/docs/10/index.html
-# https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_postgresql_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
 # https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
-db_locale: en_AU
-db_name: mezzanine
-db_schema: mezzanine
-db_user: mezzanine
-db_password: abc123 #TODO - move to Ansible Vault
-db_encoding: UTF-8
+postgresql_locale: en_AU
+postgresql_database_name: mezzanine
+postgresql_schema_name: mezzanine
+postgresql_app_user: mezzanine
+postgresql_app_user_password: abc123 #TODO - move to Ansible Vault
+postgresql_encoding: UTF-8
 # https://www.postgresql.org/docs/10/collation.html
-db_lc_collate: "{{ db_locale  }}.{{ db_encoding }}"
-db_lc_ctype: "{{ db_lc_collate }}"
-db_template: template0
-
+postgresql_lc_collate: "{{ postgresql_locale  }}.{{ postgresql_encoding }}"
+postgresql_lc_ctype: "{{ postgresql_lc_collate }}"
+postgresql_template: template0
 # TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
 postgresql_user: postgres
 postgresql_group: postgres
@@ -37,6 +42,7 @@ postgresql_data_dir: "/var/lib/pgsql/data"
 postgresql_bin_path: "/usr/bin"
 postgresql_config_path: "/var/lib/pgsql/data"
 postgresql_daemon: postgresql
+postgresql_logfile: postgresql-logfile
 postgresql_packages:
   - postgresql
   - postgresql-server
@@ -44,3 +50,4 @@ postgresql_packages:
   #- postgresql-libs # Doesn't exist in CentOS 8
   - postgresql-jdbc* # /usr/share/java/postgresql-jdbc.jar
   - postgresql-odbc # I added in just in case we want to use it
+postgresql_server_stopped_message: "pg_ctl: no server running"
