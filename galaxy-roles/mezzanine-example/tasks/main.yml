@@ -6,7 +6,22 @@
 - name: Install the pip packages required by Mezzanine.
   import_tasks: install-pip-packages-into-venv.yml
   become: yes
+  become_user: "{{ username }}"
 
 - name: Install PostgreSQL.
   import_tasks: install-postgresql.yml
   become: yes
+
+- name: Configure PostgreSQL.
+  import_tasks: configure-postgresql.yml
+  become: yes
+
+- name: Clone Mezzanine shell project..
+  import_tasks: clone-mezzanine-base-project.yml
+  become: yes
+  become_user: "{{ username }}"
+
+# - name: Configure Django
+#   import_tasks: configure-django.yml
+#   become: yes
+#   become_user: "{{ username }}"
