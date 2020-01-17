@@ -1,6 +1,13 @@
 ---
+- name: Printing git variables.
+  debug:
+    msg:
+      - "{{ repo_url }}"
+      - "{{ repo_clone_path }}"
+  when: debugging
+
 - name: Clone the mezzanine_example repo.
 # https://docs.ansible.com/ansible/latest/modules/git_module.html
   git:
     repo: "{{ repo_url }}"
-    dest: "{{ clone_path }}"
+    dest: "{{ repo_clone_path }}"
