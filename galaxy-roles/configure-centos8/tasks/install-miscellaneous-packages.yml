@@ -1,0 +1,8 @@
+---
+- name: Install various packages that I like to use.
+  package:
+    name:
+      - bash-completion
+      - vim
+      - htop
+    state: present

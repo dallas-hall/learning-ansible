@@ -1,0 +1,17 @@
+---
+# NOT NEEDED IN CENTOS8
+# - name: Add centos-release-scl Package
+# # https://www.softwarecollections.org/en/scls/rhscl/rh-postgresql10/
+# # https://wiki.centos.org/AdditionalResources/Repositories/SCL
+#   package:
+#     name:
+#       - centos-release-scl
+#     state: present
+
+# https://fedoraproject.org/wiki/EPEL
+- name: Add Fedora EPEL repository
+  package:
+    name:
+      - epel-release.noarch
+    state: present
+
