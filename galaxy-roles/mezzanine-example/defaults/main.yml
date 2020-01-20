@@ -51,3 +51,9 @@ postgresql_packages:
   - postgresql-jdbc* # /usr/share/java/postgresql-jdbc.jar
   - postgresql-odbc # I added in just in case we want to use it
 postgresql_server_stopped_message: "pg_ctl: no server running"
+
+# django - https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+django_domains:
+  - mezzanine-server
+django_secret_key: 0123456789ABCDEF
+

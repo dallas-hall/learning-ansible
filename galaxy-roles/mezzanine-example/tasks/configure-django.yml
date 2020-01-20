@@ -1,0 +1,31 @@
+---
+# https://docs.ansible.com/ansible/latest/modules/django_manage_module.html
+# install-pip-packages-into-venv.yml - Create venv, install pip packages, and activate venv.
+# clone-mezzanine-base-project - Start Django project. django-admin startproject my-project .
+- name: Update Django's local_settings.py file.
+  template:
+    src: templates/local_settings.py.j2
+    dest: "{{ project_path }}/{{ project_name}}/local_settings.py"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: '0644'
+
+# Create the database - python manage.py migrate
+- name: Create the database.
+  django_manage: 
+    command: "migrate"
+    app_path: "{{ project_path }}"
+    virtualenv: "{{ venv_project_path }}"
+# Run dev server - python manage.py runserver
+# Create a django app - python manage.py startapp my-app
+# Update app models and the database.
+
+# Create the superuser - python manage.py createsuperuser
+- name: Create the superuser.
+  django_manage: 
+    command: "createsuperuser --noinput --username={{ postgresql_app_user }} --email={{ postgresql_app_user_password }}@localhost"
+    app_path: "{{ project_path }}"
+    virtualenv: "{{ venv_project_path }}"
+# https://github.com/ansible/ansible/issues/29786 - Not idempotent yet.
+
+
