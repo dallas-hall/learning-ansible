@@ -21,7 +21,7 @@
   become: yes
   become_user: "{{ username }}"
 
-# - name: Configure Django
-#   import_tasks: configure-django.yml
-#   become: yes
-#   become_user: "{{ username }}"
+- name: Configure Django
+  import_tasks: configure-django.yml
+  become: yes
+  become_user: "{{ username }}"
