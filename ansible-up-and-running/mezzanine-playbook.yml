@@ -1,5 +1,5 @@
 ---
-- name: Configure CentOS 8
+- name: Install and configure Mezzanine.
   hosts: all
   become: no
   gather_facts: yes
