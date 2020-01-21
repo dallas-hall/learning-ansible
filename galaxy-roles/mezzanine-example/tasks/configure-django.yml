@@ -21,11 +21,25 @@
 # Update app models and the database.
 
 # Create the superuser - python manage.py createsuperuser
+- name: Check if super user exists.
+  command: echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ postgresql_app_user }}').count()>0)" | {{ venv_project_path }}/bin/python ./manage.py shell
+  args:
+    chdir: "{{ project_path }}"
+  register: superuser_existed
+  # Don't report it as changed
+  changed_when: False
+
 - name: Create the superuser.
   django_manage: 
-    command: "createsuperuser --noinput --username={{ postgresql_app_user }} --email={{ postgresql_app_user_password }}@localhost"
+    command: "createsuperuser --noinput --username={{ postgresql_app_user }} --email={{ postgresql_app_user }}@localhost"
     app_path: "{{ project_path }}"
     virtualenv: "{{ venv_project_path }}"
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html
+  environment:
+  # https://docs.djangoproject.com/en/3.0/ref/django-admin/#createsuperuser
+    DJANGO_SUPERUSER_PASSWORD: "{{ postgresql_app_user_password }}"
+  # Run and report changed only if the superuser didn't exist.
+  when: not superuser_existed
 # https://github.com/ansible/ansible/issues/29786 - Not idempotent yet.
 
 
