@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 SECRET_KEY = "{{ django_secret_key }}"
 NEVERCACHE_KEY = "{{ django_secret_key }}"
-ALLOWED_HOSTS = [{% for domain in django_domains %}"{{ domain }}",{% endfor %}]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "::1", {% for domain in django_domains %}"{{ domain }}",{% endfor %}]
 
 DATABASES = {
     "default": {
