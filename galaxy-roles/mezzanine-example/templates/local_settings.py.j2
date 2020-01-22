@@ -2,7 +2,8 @@ from __future__ import unicode_literals
 
 SECRET_KEY = "{{ django_secret_key }}"
 NEVERCACHE_KEY = "{{ django_secret_key }}"
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "::1", {% for domain in django_domains %}"{{ domain }}",{% endfor %}]
+# Any request that is received from a different domain will return 400 error code.
+ALLOWED_HOSTS = [{% for domain in django_domains %}"{{ domain }}",{% endfor %} "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}", "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv6'][0]['address'] }}",]
 
 DATABASES = {
     "default": {
