@@ -1,4 +1,12 @@
 ---
+# - name: Print IP v4 address
+#   debug: 
+#     msg: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+
+# - name: Print IP v6 address
+#   debug:   
+#     msg: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv6'][0]['address'] }}"
+
 # https://docs.ansible.com/ansible/latest/modules/django_manage_module.html
 # install-pip-packages-into-venv.yml - Create venv, install pip packages, and activate venv.
 # clone-mezzanine-base-project - Start Django project. django-admin startproject my-project .
@@ -22,24 +30,30 @@
 
 # Create the superuser - python manage.py createsuperuser
 - name: Check if super user exists.
-  command: echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ postgresql_app_user }}').count()>0)" | {{ venv_project_path }}/bin/python ./manage.py shell
+# https://docs.ansible.com/ansible/latest/modules/shell_module.html - Need to use shell for redirection to work.
+  shell: "{{ venv_project_path }}/bin/python ./manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='{{ mezzanine_admin }}').count()>0)\""
   args:
     chdir: "{{ project_path }}"
   register: superuser_existed
-  # Don't report it as changed
-  changed_when: False
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#overriding-the-changed-result
+  changed_when: False # Turning off the reporting that something has changed.
 
-- name: Create the superuser.
-  django_manage: 
-    command: "createsuperuser --noinput --username={{ postgresql_app_user }} --email={{ postgresql_app_user }}@localhost"
-    app_path: "{{ project_path }}"
-    virtualenv: "{{ venv_project_path }}"
-  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html
-  environment:
-  # https://docs.djangoproject.com/en/3.0/ref/django-admin/#createsuperuser
-    DJANGO_SUPERUSER_PASSWORD: "{{ postgresql_app_user_password }}"
-  # Run and report changed only if the superuser didn't exist.
-  when: not superuser_existed
-# https://github.com/ansible/ansible/issues/29786 - Not idempotent yet.
+- name: Create the superuser if it doesn't exist.
+  shell: "{{ venv_project_path }}/bin/python ./manage.py shell -c \"from django.contrib.auth.models import User; User.objects.create_superuser('{{ mezzanine_admin }}', '{{ mezzanine_admin_email }}', '{{ mezzanine_admin_password }}')\""
+  args:
+    chdir: "{{ project_path }}"
+  when: superuser_existed.stdout == "False"
 
-
+# This isn't reading the environment variable properly.
+# - name: Create the superuser.
+#   django_manage: 
+#     command: "createsuperuser --noinput --username={{ postgresql_app_user }} --email={{ postgresql_app_user }}@localhost"
+#     app_path: "{{ project_path }}"
+#     virtualenv: "{{ venv_project_path }}"
+#   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html
+#   environment:
+#   # https://docs.djangoproject.com/en/3.0/ref/django-admin/#createsuperuser
+#     DJANGO_SUPERUSER_PASSWORD: "{{ postgresql_app_user_password }}"
+#   # Run and report changed only if the superuser didn't exist.
+#   #when: superuser_existed.stdout == "False"
+# # https://github.com/ansible/ansible/issues/29786 - Not idempotent yet, eventually will be.
