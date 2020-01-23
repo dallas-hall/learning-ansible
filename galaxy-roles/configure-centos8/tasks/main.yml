@@ -19,6 +19,10 @@
   import_tasks: set-locale-settings.yml
   become: yes
 
+- name: Install and configure Postfix mail server.
+  import_tasks: set-up-mail-server.yml
+  become: yes
+
 - name: Install miscellaneous packages.
   import_tasks: install-miscellaneous-packages.yml
   become: yes
