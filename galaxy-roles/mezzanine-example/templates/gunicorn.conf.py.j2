@@ -1,0 +1,7 @@
+from __future__ import unicode_literals
+import multiprocessing
+
+bind = "127.0.0.1:{{ gunicorn_default_port }}"
+workers = "{{ gunicorn_default_workers }}"
+loglevel = "error"
+proc_name = "{{ project_name }}"

@@ -25,3 +25,8 @@
   import_tasks: configure-django.yml
   become: yes
   become_user: "{{ username }}"
+
+- name: Configure Gunicorn WSGI.
+  import_tasks: configure-gunicorn.yml
+  become: yes
+  become_user: "{{ username }}"
