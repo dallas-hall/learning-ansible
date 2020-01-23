@@ -49,6 +49,7 @@
 #   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#regular-expression-filters
 #     current_postgresql_server_status: "{{ pg_ctl_result.stdout | regex_search('{{ postgresql_server_stopped_message }}') }}"
 
+# TODO Change this postgresql.service
 - name: Start the the PostgreSQL database server, first time run only.
   command: "{{ postgresql_bin_path }}/pg_ctl start -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
   become: true
