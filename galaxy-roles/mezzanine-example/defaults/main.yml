@@ -59,3 +59,7 @@ django_secret_key: 0123456789ABCDEF
 mezzanine_admin: "{{ postgresql_app_user }}"
 mezzanine_admin_email: "{{ postgresql_app_user }}@mezzanine-server"
 mezzanine_admin_password: "{{ postgresql_app_user_password }}"  # TODO use Ansible Vault
+
+# Gunicorn - http://docs.gunicorn.org/en/stable/configure.html#configuration-file
+gunicorn_default_port: 8000
+gunicorn_default_workers: multiprocessing.cpu_count() * 2 + 1
