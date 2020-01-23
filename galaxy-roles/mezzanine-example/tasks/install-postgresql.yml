@@ -13,7 +13,7 @@
     src: postgres.sh.j2
     dest: /etc/profile.d/postgres.sh
     mode: 0644
-  #notify: restart postgresql  # Not be used, because this tries postgres.service and we are using pg_ctl
+  notify: restart postgresql
 
 - name: Ensure PostgreSQL data directory exists.
   file:
@@ -33,27 +33,27 @@
   when: not pgdata_dir_version.stat.exists
   become: true
   become_user: "{{ postgresql_user }}"
+  notify: restart postgresql
 
-- name: Check if the PostgreSQL database server is running.
-  command: "{{ postgresql_bin_path }}/pg_ctl status -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
-  become: true
-  become_user: "{{ postgresql_user }}"
-  register: pg_ctl_result
-  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html
-  ignore_errors: yes
-  # Only mention it was changed when the database wasn't running.
-  changed_when: pg_ctl_result.stdout == postgresql_server_stopped_message
+# - name: Check if the PostgreSQL database server is running.
+#   command: "{{ postgresql_bin_path }}/pg_ctl status -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
+#   become: true
+#   become_user: "{{ postgresql_user }}"
+#   register: pg_ctl_result
+#   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html
+#   ignore_errors: yes
+#   # Only mention it was changed when the database wasn't running.
+#   changed_when: pg_ctl_result.stdout == postgresql_server_stopped_message
 
-# - name: Parse out the current PostgreSQL database server status.
-#   set_fact:
-#   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#regular-expression-filters
-#     current_postgresql_server_status: "{{ pg_ctl_result.stdout | regex_search('{{ postgresql_server_stopped_message }}') }}"
+# # - name: Parse out the current PostgreSQL database server status.
+# #   set_fact:
+# #   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#regular-expression-filters
+# #     current_postgresql_server_status: "{{ pg_ctl_result.stdout | regex_search('{{ postgresql_server_stopped_message }}') }}"
 
-# TODO Change this postgresql.service
-- name: Start the the PostgreSQL database server, first time run only.
-  command: "{{ postgresql_bin_path }}/pg_ctl start -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
-  become: true
-  become_user: "{{ postgresql_user }}"
-  # Only run when it hasn't been started and report it has changed when its run.
-  when: pg_ctl_result.stdout == postgresql_server_stopped_message
-  changed_when: pg_ctl_result.stdout == postgresql_server_stopped_message
+# - name: Start the the PostgreSQL database server, first time run only.
+#   command: "{{ postgresql_bin_path }}/pg_ctl start -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
+#   become: true
+#   become_user: "{{ postgresql_user }}"
+#   # Only run when it hasn't been started and report it has changed when its run.
+#   when: pg_ctl_result.stdout == postgresql_server_stopped_message
+#   changed_when: pg_ctl_result.stdout == postgresql_server_stopped_message
