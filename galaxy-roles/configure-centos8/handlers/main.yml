@@ -1,2 +1,7 @@
 ---
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#handlers-running-operations-on-change
 # handlers file for configure-centos8
+- name: restart postfix
+  service: 
+    name: postfix
+    state: restarted
