@@ -63,3 +63,10 @@ mezzanine_admin_password: "{{ postgresql_app_user_password }}"  # TODO use Ansib
 # Gunicorn - http://docs.gunicorn.org/en/stable/configure.html#configuration-file
 gunicorn_default_port: 8000
 gunicorn_default_workers: multiprocessing.cpu_count() * 2 + 1
+
+# Nginx
+nginx_server_name: localhost
+nginx_key_file: /etc/nginx/ssl/nginx.key
+nginx_cert_file: /etc/nginx/ssl/nginx.crt
+#nginx_conf_file: /etc/nginx/sites-available/default
+nginx_conf_file: /etc/nginx/conf.d/basic-tls-webserver.conf

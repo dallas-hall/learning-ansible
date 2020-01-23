@@ -1,0 +1,63 @@
+upstream {{ project_name }} {
+  server unix:{{ project_path }}/gunicorn.sock fail_timeout=0
+}
+
+server {
+  listen 80;
+
+  {% if tls_enabled %}
+  listen 443 ssl http2 default_server;
+  listen [::]:443 ssl http2 default_server;
+  {% endif %}
+
+  server_name {{ domains|join(", ") }};
+  client_max_body_size 10M;
+  keepalive_timeout 15;
+
+  {% if tls_enabled %}
+  ssl_certificate conf/{{ nginx_cert_file }};
+  ssl_certificate_key conf/{{ nginx_key_file }};
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout  10m;
+  ssl_ciphers PROFILE=SYSTEM;
+  ssl_prefer_server_ciphers on;
+  {% endif %}
+
+  root /usr/share/nginx/html;
+  index index.html index.htm;
+
+  location / {
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Protocol $scheme;
+    proxy_pass http://{{ project_name }}
+  }
+
+  location /static/ {
+    root {{ project_path }};
+    access_log off;
+    log_not_found off;
+  }
+
+  location /robots.txt {
+    root {{ project_path }}/static;
+    access_log off;
+    log_not_found;
+  }
+
+  location /favicon.ico {
+    root {{project_path}}/static/img;
+    access_log off;
+    log_not_found off;
+  }
+
+  error_page 404 /404.html;
+      location = /40x.html {
+  }
+
+  error_page 500 502 503 504 /50x.html;
+      location = /50x.html {
+  }
+}
