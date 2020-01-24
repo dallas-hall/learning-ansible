@@ -35,6 +35,12 @@
   become_user: "{{ postgresql_user }}"
   notify: restart postgresql
 
+- name: Start and enable the PostgreSQL database server.
+  systemd:
+    name: "{{ postgresql_daemon }}"
+    state: started
+    enabled: yes
+
 # - name: Check if the PostgreSQL database server is running.
 #   command: "{{ postgresql_bin_path }}/pg_ctl status -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
 #   become: true
