@@ -19,7 +19,7 @@
   openssl_privatekey:
     owner: root
     group: root
-    path: "{{ private_key_path }}/{{ project_name }}.pem"
+    path: "{{ private_key_path }}/{{ nginx_key_file }}"
   when: tls_enabled
 
 - name: Generate an OpenSSL Certificate Signing Request
@@ -27,8 +27,8 @@
   openssl_csr:
     owner: root
     group: root
-    path: "{{ private_key_path }}/{{ project_name }}.csr"
-    privatekey_path: "{{ private_key_path }}/{{ project_name }}.pem"
+    path: "{{ private_key_path }}/{{ nginx_csr_file }}"
+    privatekey_path: "{{ private_key_path }}/{{ nginx_key_file }}"
     common_name: "{{ project_name }}"
   when: tls_enabled
 
@@ -37,9 +37,9 @@
   openssl_certificate:
     owner: root
     group: root
-    path: "{{ certificate_path }}/{{ project_name }}.crt"
-    privatekey_path: "{{ private_key_path }}/{{ project_name }}.pem"
-    csr_path: "{{ private_key_path }}/{{ project_name }}.csr"
+    path: "{{ certificate_path }}/{{ nginx_cert_file }}"
+    privatekey_path: "{{ private_key_path }}/{{ nginx_key_file }}"
+    csr_path: "{{ private_key_path }}/{{ nginx_csr_file }}"
     provider: selfsigned
   when: tls_enabled
 
@@ -50,9 +50,9 @@
     dest: /usr/share/nginx/html/index.html
     mode: '0644'
 
-# Handlers doesn't work with vagrant provision, but works with ansible-playbook
-# - name: Restart Nginx
+# - name: Enable NGINX service.
 # # https://docs.ansible.com/ansible/latest/modules/systemd_module.html
 #   systemd:
 #     name: nginx
-#     state: restarted
+#     state: started
+#     enabled: yes

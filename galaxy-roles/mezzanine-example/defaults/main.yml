@@ -66,8 +66,9 @@ gunicorn_default_workers: multiprocessing.cpu_count() * 2 + 1
 
 # Nginx
 #nginx_server_name: localhost # Covered by nginx.conf.j2 template
-nginx_key_file: "/etc/nginx/ssl/{{ project_name }}.key"
-nginx_cert_file: "/etc/nginx/ssl/{{ project_name}}.crt"
+nginx_key_file: "{{ project_name }}.pem"
+nginx_cert_file: "{{ project_name}}.crt"
+nginx_csr_file: "{{ project_name}}.csr"
 nginx_default_conf_file: /etc/nginx/sites-available/default
 nginx_custom_conf_path: /etc/nginx/sites-available
 nginx_custom_conf_symlink_path: /etc/nginx/sites-enabled
