@@ -1,0 +1,58 @@
+---
+- name: Ensure NGINX is installed.
+# https://docs.ansible.com/ansible/latest/modules/dnf_module.html
+  dnf:
+    name: nginx
+
+- name: Copy templated custom NGINX configuration file.
+# https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/
+  template:
+    src: templates/nginx.conf.j2
+    dest: "{{ nginx_custom_confd_path }}/{{ project_name }}.conf"
+    owner: root
+    group: root
+    mode: '0600'
+  notify: restart nginx
+
+- name: Generate OpenSSL private key - defaulting to RSA 4096.
+# https://docs.ansible.com/ansible/latest/modules/openssl_privatekey_module.html
+  openssl_privatekey:
+    owner: root
+    group: root
+    path: "{{ private_key_path }}/{{ project_name }}.pem"
+  when: tls_enabled
+
+- name: Generate an OpenSSL Certificate Signing Request
+# https://docs.ansible.com/ansible/latest/modules/openssl_csr_module.html
+  openssl_csr:
+    owner: root
+    group: root
+    path: "{{ private_key_path }}/{{ project_name }}.csr"
+    privatekey_path: "{{ private_key_path }}/{{ project_name }}.pem"
+    common_name: "{{ project_name }}"
+  when: tls_enabled
+
+- name: Generate self signed OpenSSL TLS certificate.
+# https://docs.ansible.com/ansible/latest/modules/openssl_certificate_module.html
+  openssl_certificate:
+    owner: root
+    group: root
+    path: "{{ certificate_path }}/{{ project_name }}.crt"
+    privatekey_path: "{{ private_key_path }}/{{ project_name }}.pem"
+    csr_path: "{{ private_key_path }}/{{ project_name }}.csr"
+    provider: selfsigned
+  when: tls_enabled
+
+- name: Create index.html
+# https://docs.ansible.com/ansible/latest/modules/template_module.html
+  template:
+    src: templates/index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    mode: '0644'
+
+# Handlers doesn't work with vagrant provision, but works with ansible-playbook
+# - name: Restart Nginx
+# # https://docs.ansible.com/ansible/latest/modules/systemd_module.html
+#   systemd:
+#     name: nginx
+#     state: restarted

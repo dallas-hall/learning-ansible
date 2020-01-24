@@ -30,3 +30,7 @@
   import_tasks: configure-gunicorn.yml
   become: yes
   become_user: "{{ username }}"
+
+- name: Configure NGINX.
+  import_tasks: configure-nginx-webserver-https.yml
+  become: yes

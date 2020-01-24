@@ -6,19 +6,22 @@ server {
   listen 80;
 
   {% if tls_enabled %}
+  # https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/#setting-up-an-https-server
+  # https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/#https-server-optimization
   listen 443 ssl http2 default_server;
   listen [::]:443 ssl http2 default_server;
   {% endif %}
 
-  server_name {{ domains|join(", ") }};
+  server_name {{ django_domains|join(", ") }};
   client_max_body_size 10M;
-  keepalive_timeout 15;
+  keepalive_timeout 70;
 
   {% if tls_enabled %}
   ssl_certificate conf/{{ nginx_cert_file }};
   ssl_certificate_key conf/{{ nginx_key_file }};
   ssl_session_cache shared:SSL:10m;
-  ssl_session_timeout  10m;
+  ssl_session_timeout 10m;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_ciphers PROFILE=SYSTEM;
   ssl_prefer_server_ciphers on;
   {% endif %}

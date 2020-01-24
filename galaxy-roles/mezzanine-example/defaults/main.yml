@@ -65,8 +65,13 @@ gunicorn_default_port: 8000
 gunicorn_default_workers: multiprocessing.cpu_count() * 2 + 1
 
 # Nginx
-nginx_server_name: localhost
-nginx_key_file: /etc/nginx/ssl/nginx.key
-nginx_cert_file: /etc/nginx/ssl/nginx.crt
-#nginx_conf_file: /etc/nginx/sites-available/default
-nginx_conf_file: /etc/nginx/conf.d/basic-tls-webserver.conf
+#nginx_server_name: localhost # Covered by nginx.conf.j2 template
+nginx_key_file: "/etc/nginx/ssl/{{ project_name }}.key"
+nginx_cert_file: "/etc/nginx/ssl/{{ project_name}}.crt"
+nginx_default_conf_file: /etc/nginx/sites-available/default
+nginx_custom_conf_path: /etc/nginx/sites-available
+nginx_custom_conf_symlink_path: /etc/nginx/sites-enabled
+nginx_custom_confd_path: /etc/nginx/conf.d
+certificate_path: /etc/pki/tls/certs
+private_key_path: /etc/pki/tls/private
+tls_enabled: True
