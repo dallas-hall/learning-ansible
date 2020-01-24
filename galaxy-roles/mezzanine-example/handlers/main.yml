@@ -1,11 +1,12 @@
 ---
 # TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
-# Currently not working as postgres.service isn't being used, we are using pg_ctl instead
 - name: restart postgresql
-  service:
+  systemd:
     name: "{{ postgresql_daemon }}"
     state: "{{ postgresql_restarted_state }}"
     enabled: yes
+  become: true
+  become_user: root # Don't need postgres here as the service file runs are postgres user.
     #sleep: 5 # Doesn't exist in CentOS
 
 # - name: start postgresql
@@ -20,7 +21,9 @@
 
 - name: restart nginx
 # https://docs.ansible.com/ansible/latest/modules/service_module.html
-  service:
+  systemd:
     name: nginx
     state: restarted
     enabled: yes
+  become: true
+  become_user: root
