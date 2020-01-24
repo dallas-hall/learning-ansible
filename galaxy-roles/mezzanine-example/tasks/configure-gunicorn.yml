@@ -1,4 +1,5 @@
 ---
+# Requires install-pip-packages-into-venv.yml to be run first.
 - name: Install Gunicorn WSGI configuration file.
   template: 
     src: templates/gunicorn.conf.py.j2
