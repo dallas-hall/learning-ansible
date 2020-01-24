@@ -1,5 +1,5 @@
 upstream {{ project_name }} {
-  server unix:{{ project_path }}/gunicorn.sock fail_timeout=0
+  server unix:{{ project_path }}/gunicorn.sock fail_timeout=0;
 }
 
 server {
@@ -12,13 +12,13 @@ server {
   listen [::]:443 ssl http2 default_server;
   {% endif %}
 
-  server_name {{ django_domains|join(", ") }};
+  server_name {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}; # SHOULD BE IP ADDRESS
   client_max_body_size 10M;
   keepalive_timeout 70;
 
   {% if tls_enabled %}
-  ssl_certificate conf/{{ nginx_cert_file }};
-  ssl_certificate_key conf/{{ nginx_key_file }};
+  ssl_certificate {{ certificate_path }}/{{ nginx_cert_file }};
+  ssl_certificate_key {{ private_key_path }}/{{ nginx_key_file }};
   ssl_session_cache shared:SSL:10m;
   ssl_session_timeout 10m;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -35,7 +35,7 @@ server {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Protocol $scheme;
-    proxy_pass http://{{ project_name }}
+    proxy_pass http://{{ project_name }};
   }
 
   location /static/ {
@@ -47,7 +47,7 @@ server {
   location /robots.txt {
     root {{ project_path }}/static;
     access_log off;
-    log_not_found;
+    log_not_found off;
   }
 
   location /favicon.ico {
