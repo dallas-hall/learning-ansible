@@ -34,3 +34,7 @@
 - name: Configure NGINX.
   import_tasks: configure-nginx-webserver-https.yml
   become: yes
+
+- name: Configure custom systemd files.
+  import_tasks: create-systemd-service-files.yml
+  become: yes

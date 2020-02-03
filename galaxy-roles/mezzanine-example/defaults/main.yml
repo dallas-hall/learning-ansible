@@ -66,6 +66,7 @@ gunicorn_default_workers: multiprocessing.cpu_count() * 2 + 1
 
 # Nginx
 #nginx_server_name: localhost # Covered by nginx.conf.j2 template
+nginx_user_name: "nginx"
 nginx_key_file: "{{ project_name }}.pem"
 nginx_cert_file: "{{ project_name}}.crt"
 nginx_csr_file: "{{ project_name}}.csr"
@@ -76,3 +77,9 @@ nginx_custom_confd_path: /etc/nginx/conf.d
 certificate_path: /etc/pki/tls/certs
 private_key_path: /etc/pki/tls/private
 tls_enabled: True
+
+# Systemd - systemctl show --property=UnitPath
+# https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+# https://wiki.archlinux.org/index.php/Systemd#Writing_unit_files
+systemd_user_service_file_path: /usr/lib/systemd/system
+systemd_admin_service_file_path: /etc/systemd/system

@@ -27,3 +27,11 @@
     enabled: yes
   become: true
   become_user: root
+
+- name: restart gunicorn
+  systemd:
+    name: gunicorn
+    state: restarted
+    enabled: yes
+  become: true
+  become_user: "{{ username }}"
