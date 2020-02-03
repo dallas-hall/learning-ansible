@@ -1,0 +1,26 @@
+# https://docs.gunicorn.org/en/stable/deploy.html#systemd
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+Type=notify
+# the specific user that our service will run as
+User={{ username }}
+Group= {{ nginx_user_name }}
+# another option for an even more restricted service is
+# DynamicUser=yes
+# see http://0pointer.net/blog/dynamic-users-with-systemd.html
+RuntimeDirectory=gunicorn
+WorkingDirectory={{ repo_clone_path }}
+# https://stackoverflow.com/a/37211676
+# We need - here to SELinux doesn't block the running from the Python venv.
+ExecStart=-{{ venv_base_path }}/{{ venv_name }}/bin/gunicorn -c {{ project_path }}/gunicorn.conf.py {{ project_name }}.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
