@@ -28,9 +28,17 @@
   become: true
   become_user: root
 
-- name: restart gunicorn
+- name: restart gunicorn.socket
   systemd:
-    name: gunicorn
+    name: gunicorn.socket
+    state: restarted
+    enabled: yes
+  become: true
+  become_user: "{{ username }}"
+
+- name: restart gunicorn.service
+  systemd:
+    name: gunicorn.service
     state: restarted
     enabled: yes
   become: true
