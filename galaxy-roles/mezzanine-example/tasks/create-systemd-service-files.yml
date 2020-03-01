@@ -3,7 +3,7 @@
 - name: Create gunicorn.service systemd file.
   template:
     src: templates/gunicorn.service.j2
-    dest: "{{ systemd_admin_service_file_path }}/gunicorn.service"
+    dest: "{{ systemd_user_service_file_path }}/gunicorn.service"
     mode: '0644'
     owner: root
     group: root
@@ -13,7 +13,7 @@
 # https://docs.ansible.com/ansible/latest/modules/template_module.html
   template:
     src: templates/gunicorn.socket.j2
-    dest: "{{ systemd_admin_service_file_path }}/gunicorn.socket"
+    dest: "{{ systemd_user_service_file_path }}/gunicorn.socket"
     mode: '0644'
     owner: root
     group: root
