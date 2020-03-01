@@ -7,7 +7,7 @@
     mode: '0644'
     owner: root
     group: root
-  notify: restart gunicorn
+  notify: restart gunicorn.service
 
 - name: Create gunicorn.socket systemd file.
 # https://docs.ansible.com/ansible/latest/modules/template_module.html
@@ -17,4 +17,4 @@
     mode: '0644'
     owner: root
     group: root
-  notify: restart gunicorn
+  notify: restart gunicorn.socket
