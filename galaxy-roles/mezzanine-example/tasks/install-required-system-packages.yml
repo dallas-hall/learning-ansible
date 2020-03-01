@@ -16,3 +16,7 @@
     - python3-virtualenv
     - python3-psycopg2
     # - supervisor # Not needed as we will use systemctl
+    # SELinux management tools
+    - policycoreutils-python-utils-2.9-3.el8.noarch
+    - setroubleshoot.x86_64
+    - setroubleshoot-server.x86_64
