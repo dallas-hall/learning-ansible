@@ -27,6 +27,10 @@
   import_tasks: install-miscellaneous-packages.yml
   become: yes
 
+- name: Install SELinux Management Tools.
+  import_tasks: install-selinux-tools.yml
+  become: yes
+
 - name: Install Python 3.
   import_tasks: install-python3.yml
   become: yes

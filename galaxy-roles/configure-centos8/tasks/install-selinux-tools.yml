@@ -1,0 +1,10 @@
+---
+# https://docs.ansible.com/ansible/latest/modules/yum_module.html
+- name: Install SELinux Management Tools
+  package:
+    name:
+      # SELinux management tools
+      - policycoreutils-python-utils-2.9-3.el8.noarch
+      - setroubleshoot.x86_64
+      - setroubleshoot-server.x86_64
+    state: present

@@ -1,0 +1,8 @@
+---
+- name: Install PostgreSQL.
+  import_tasks: install-postgresql.yml
+  become: yes
+
+- name: Configure PostgreSQL.
+  import_tasks: configure-postgresql.yml
+  become: yes

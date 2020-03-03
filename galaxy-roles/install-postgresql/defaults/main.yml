@@ -1,0 +1,40 @@
+---
+# CentOS 8 has PostgreSQL 10 - https://www.postgresql.org/docs/10/index.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_postgresql_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
+# https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
+postgresql_locale: en_AU
+postgresql_database_name: my_db
+postgresql_schema_name: my_db
+postgresql_app_user: my_db
+postgresql_app_user_password: abc123 #TODO - move to Ansible Vault
+postgresql_encoding: UTF-8
+# https://www.postgresql.org/docs/10/collation.html
+postgresql_lc_collate: "{{ postgresql_locale  }}.{{ postgresql_encoding }}"
+postgresql_lc_ctype: "{{ postgresql_lc_collate }}"
+postgresql_template: template0
+# TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
+postgresql_user: postgres
+postgresql_group: postgres
+# Set postgresql state when configuration changes are made. Recommended values:
+# `restarted` or `reloaded`
+postgresql_restarted_state: "restarted"
+postgresql_version: "10"
+postgresql_data_dir: "/var/lib/pgsql/data"
+postgresql_bin_path: "/usr/bin"
+postgresql_config_path: "/var/lib/pgsql/data"
+postgresql_daemon: postgresql
+postgresql_logfile: postgresql-logfile
+postgresql_packages:
+  - postgresql
+  - postgresql-server
+  - postgresql-contrib
+  #- postgresql-libs # Doesn't exist in CentOS 8
+  - postgresql-jdbc* # /usr/share/java/postgresql-jdbc.jar
+  - postgresql-odbc # I added in just in case we want to use it
+  # Python drivers
+  - platform-python-devel
+  - platform-python-setuptools
+  - python3-virtualenv
+  - python3-psycopg2
+postgresql_server_stopped_message: "pg_ctl: no server running"
