@@ -7,3 +7,16 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: '0644'
+
+# This tripped me up for about 2 weeks. https://fedoramagazine.org/troubleshooting-selinux/ & https://www.youtube.com/watch?v=cNoVgDqqJmM
+# An SELinux policy is needed to allow the Gunicorn service and socket to work.
+- name: Create SELinux local policy module for gunicorn.service.
+  shell: ausearch -c 'gunicorn' --raw | audit2allow -M my-gunicorn && semodule -X 300 -i my-gunicorn.pp
+  become: yes
+  become_user: root
+
+# An SELinux policy is needed to allow the Gunicorn service and socket to work.
+- name: Create SELinux local policy module for gunicorn.socket.
+  shell: ausearch -c 'nginx' --raw | audit2allow -M my-nginx && semodule -X 300 -i my-nginx.pp
+  become: yes
+  become_user: root

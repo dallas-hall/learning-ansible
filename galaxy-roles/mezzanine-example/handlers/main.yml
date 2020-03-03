@@ -1,24 +1,4 @@
 ---
-# TAKEN FROM https://galaxy.ansible.com/geerlingguy/postgresql
-- name: restart postgresql
-  systemd:
-    name: "{{ postgresql_daemon }}"
-    state: "{{ postgresql_restarted_state }}"
-    enabled: yes
-  become: true
-  become_user: root # Don't need postgres here as the service file runs are postgres user.
-    #sleep: 5 # Doesn't exist in CentOS
-
-# - name: start postgresql
-#   command: "{{ postgresql_bin_path }}/pg_ctl start -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
-#   become: true
-#   become_user: "{{ postgresql_user }}"
-
-# - name: restart postgresql
-#   command: "{{ postgresql_bin_path }}/pg_ctl restart -D {{ postgresql_data_dir }} -l {{ postgresql_logfile }}"
-#   become: true
-#   become_user: "{{ postgresql_user }}"
-
 - name: restart nginx
 # https://docs.ansible.com/ansible/latest/modules/service_module.html
   systemd:

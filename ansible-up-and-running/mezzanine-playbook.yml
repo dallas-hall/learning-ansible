@@ -4,8 +4,22 @@
   become: no
   gather_facts: yes
   roles:
-    - configure-centos8
-    - mezzanine-example
+    - role: configure-centos8
+    - role: install-postgresql
+      vars:
+        postgresql_database_name: "{{ common_username }}"
+        postgresql_schema_name: "{{ common_username }}"
+        postgresql_app_user: "{{ common_username }}"
+        postgresql_app_user_password: "{{ common_password }}"
+    - role: mezzanine-example
+      vars:
+        app_username: "{{ common_username }}"
+        app_password: "{{ common_password }}"
+        # Needed for local_settings.py template.
+        postgresql_database_name: "{{ common_username }}"
+        postgresql_app_user: "{{ common_username }}"
+        postgresql_app_user_password: "{{ common_password }}"
+
 
 # https://docs.ansible.com/ansible/latest/modules/yum_module.html
 # - name: Update the system & reboot.
