@@ -7,7 +7,7 @@
     mode: '0644'
     owner: root
     group: root
-  notify: restart gunicorn.service
+#  notify: restart gunicorn.service
 
 - name: Create gunicorn.socket systemd file.
 # https://docs.ansible.com/ansible/latest/modules/template_module.html
@@ -17,4 +17,37 @@
     mode: '0644'
     owner: root
     group: root
-  notify: restart gunicorn.socket
+#  notify: restart gunicorn.socket
+
+- debug:
+    msg: "Remember to setenforce 0 and start the service. When it fails, check out journalctl -xe for the SELinux commands to run to fix it. You will need to exercise the app completely to find all errors. Turn back on SELinux with setenforce 1."
+
+# - name: Try to start the gunicorn.service - it will fail the first time because of SELinux.
+#   systemd:
+#     state: started
+#     name: gunicorn.service
+#   # We know it will fail the first time.
+#   ignore_errors: yes
+
+# # This tripped me up for about 2 weeks. https://fedoramagazine.org/troubleshooting-selinux/ & https://www.youtube.com/watch?v=cNoVgDqqJmM
+# # An SELinux policy is needed to allow the Gunicorn service and socket to work.
+# - name: Create SELinux local policy module for gunicorn.service.
+#   shell: ausearch -c 'gunicorn' --raw | audit2allow -M my-gunicorn
+#   become: yes
+#   become_user: root
+
+# - name: Permanently implement SELinux local policy module for gunicorn.service.
+#   shell: semodule -X 300 -i my-gunicorn.pp
+#   become: yes
+#   become_user: root
+
+# # An SELinux policy is needed to allow the Gunicorn service and socket to work.
+# - name: Create SELinux local policy module for gunicorn.socket.
+#   shell: ausearch -c 'nginx' --raw | audit2allow -M my-nginx 
+#   become: yes
+#   become_user: root
+
+# - name: Permanently implement SELinux local policy module for gunicorn.socket.
+#   shell: semodule -X 300 -i my-nginx.pp
+#   become: yes
+#   become_user: root
