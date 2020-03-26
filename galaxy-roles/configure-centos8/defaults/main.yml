@@ -9,3 +9,7 @@ postfix_inet_interfaces: localhost
 postfix_inet_protocols: all
 postfix_service_state: started
 postfix_service_enabled: true
+
+# Docker
+docker_service_state: started
+docker_service_enabled: true

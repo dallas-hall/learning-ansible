@@ -2,7 +2,12 @@
 # https://docs.ansible.com/ansible/latest/modules/yum_module.html
 - name: Install Python 3.6
   yum:
-    name: python3
+    name:
+      - python3
+      # Some development stuff
+      - platform-python-devel
+      # SELinux
+      - policycoreutils-python-utils
     state: latest
 
 # https://docs.ansible.com/ansible/latest/modules/file_module.html

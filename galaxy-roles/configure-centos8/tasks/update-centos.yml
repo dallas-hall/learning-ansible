@@ -7,6 +7,8 @@
       name: '*'
       state: latest
       update_cache: yes
+      # Need to exclude for now because of containerd dependency error. See docker-install.yml
+      exclude: docker-ce
     register: upgrade_result
 
   # https://docs.ansible.com/ansible/latest/modules/reboot_module.html

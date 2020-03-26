@@ -1,0 +1,30 @@
+---
+# https://stackoverflow.com/a/46024041
+- name: Add Docker CE repo.
+  command:
+    cmd: "dnf config-manager -y --add-repo=https://download.docker.com/linux/centos/docker-ce.repo"
+    creates: "/etc/yum.repos.d/docker-ce.repo"
+
+- name: Install Docker CE.
+  # CentOS 8 has an issue with the containerd version, the latest version of docker-ce requires a version of containerd that won't install
+  command:
+    cmd: "dnf install docker-ce --nobest --assumeyes"
+  # TODO - make this idempotent
+  notify: restart docker
+
+- name: Create Docker group.
+  group:
+    name: docker
+    state: present
+
+- name: Add vagrant user to docker group.
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+
+- name: Ensure Docker is started and enabled at boot.
+  service:
+    name: docker
+    state: "{{ docker_service_state }}"
+    enabled: "{{ docker_service_enabled }}"
