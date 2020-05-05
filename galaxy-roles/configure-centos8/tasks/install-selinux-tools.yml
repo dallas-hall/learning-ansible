@@ -4,7 +4,7 @@
   package:
     name:
       # SELinux management tools
-      - policycoreutils-python-utils-2.9-3.el8.noarch
-      - setroubleshoot.x86_64
-      - setroubleshoot-server.x86_64
+      - policycoreutils-python-utils
+      - setroubleshoot
+      - setroubleshoot-server
     state: present
