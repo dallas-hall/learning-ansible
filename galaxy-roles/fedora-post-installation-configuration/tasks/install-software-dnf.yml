@@ -55,7 +55,23 @@
       name: vlc.x86_64
       state: present
 
-- name: Install Okular Player
+- name: Install Okular
   package:
       name: okular
       state: present
+
+- name: Install Discord
+  package:
+      name: discord
+      state: present
+
+- name: Install Dropbox
+  package:
+      name: dropbox
+      state: present
+
+- name: Install Spotify
+  package:
+      name: lpf-spotify-client
+      state: present
+

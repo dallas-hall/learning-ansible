@@ -3,12 +3,13 @@
 #      name: io.atom.Atom
 #      state: present
 
-- name: Install Dropbox - Flatpak
+- name: Install Signal - Flatpak
   flatpak:
-      name: com.dropbox.Client
+      name: org.signal.Signal
       state: present
 
-- name: Install Spotify - Flatpak
+- name: Install Slack - Flatpak
   flatpak:
-      name: com.spotify.Client
+      name: org.signal.Slack
       state: present
+
