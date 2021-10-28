@@ -5,38 +5,38 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# User specific environment
-PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-export PATH
+# User specific environment, PATH covered by ~/.bash_profile
+#PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+#export PATH
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
 # User specific aliases and functions
+alias ssd='cd /ssd'
 alias dev='cd ~/Development'
 alias dls='cd ~/Downloads'
 alias opt='cd ~/opt'
 alias opt2='cd /opt'
 alias docs='cd ~/Documents'
-{% if laptop %}
-alias dev2='cd /media/data-hdd/Development'
-alias data='cd /media/data-hdd'
-{% elif desktop %}
-alias dev2='cd /media/veracrypt1/Development'
-alias data='cd /media/veracrypt2'
-{% endif %}
+alias dev2='cd /ssd/Development'
+alias books='cd /home/dallas/Documents/Books'
+alias study='cd /home/dallas/Documents/Study'
 alias load-conda-bashrc='source ~/.conda-bashrc'
-
-#custom ls aliases
-#full details on everything
-alias l='ls -aFlh --color=auto'
-#full details for hidden things only
-alias l.='ls -adFlhi .* --color=auto'
-#full details with inode
-alias li='ls -aFlhi --color=auto'
+alias qw='cd ~/opt/Games/QuakeWorld'
+# Full details on everything
+alias l='ls -AFlh --color=auto'
+# Full details for hidden things only
+alias l.='ls -AdFlhi .* --color=auto'
+# Full details with inode
+alias li='ls -AFlhi --color=auto'
+# Coloured info pages
+alias info='pinfo'
+# rsync goodness
+alias rsync='rsync --stats --progress --human-readable'
 
 #change directory colour from dark blue to light blue
-LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
+#LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
 
 #coloured man pages
 man() {
@@ -54,7 +54,22 @@ export GROFF_NO_SGR=1 #needed to get colours working
 
 #custom bash prompt
 # http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
-export PS1="\[\033[38;5;10m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;250m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;11m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+#export PS1="\[\033[38;5;10m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;250m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;11m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+# https://unix.stackexchange.com/a/31697
+# color names for readibility
+reset=$(tput sgr0)
+bold=$(tput bold)
+black=$(tput setaf 0)
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+magenta=$(tput setaf 5)
+cyan=$(tput setaf 6)
+white=$(tput setaf 7)
+#user_color=$green
+#[ "$UID" -eq 0 ] && { user_color=$red; }
+PS1="\[$reset\]\[$bold\][\u@\h \W] $ \[$reset\]"
 
 #shell history ignores if the same command was entered - https://unix.stackexchange.com/a/18443
 HISTCONTROL=ignoredups:erasedups
@@ -77,20 +92,24 @@ export ELECTRON_TRASH=gio
 export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk"
 #export _JAVA_OPTIONS="-Xmx2048m -XX:MaxPermSize=512m -Djava.awt.headless=true"
 
-{% if laptop %}
-#export ANSIBLE_ROLES_PATH="/home/blindcant/Development/ansible/galaxy-roles"
-export ANSIBLE_ROLES_PATH="/home/blindcant/Development/paas/galaxy-roles"
-{% elif desktop %}
-export ANSIBLE_ROLES_PATH="/home/blindcant/Development/ansible/galaxy-roles"
-#export ANSIBLE_ROLES_PATH="/home/blindcant/Development/paas/galaxy-roles"
-{% endif %}
+export ANSIBLE_ROLES_PATH="/home/dallas/Development/ansible/galaxy-roles"
+#export ANSIBLE_ROLES_PATH="/home/dallas/Development/paas/galaxy-roles"
 
 # https://www.vagrantup.com/docs/other/environmental-variables.html#vagrant_home
-{% if laptop %}
-export VAGRANT_HOME="/media/data-hdd/Development/vagrant"
-export VAGRANT_DOTFILE_PATH="/media/data-hdd/Development"
-{% elif desktop %}
-export VAGRANT_HOME="/media/veracrypt1/Development/vagrant"
-export VAGRANT_DOTFILE_PATH="/media/veracrypt1/Development"
-{% endif %}
-VAGRANT_DEFAULT_PROVIDER='virtualbox'
+export VAGRANT_HOME="/ssd/vagrant"
+export VAGRANT_DOTFILE_PATH="/ssd/Development"
+
+# podman can replace docker - https://podman.io/getting-started/
+alias docker='podman'
+
+# Default editor as vim
+export EDITOR='/usr/bin/vim'
+
+# kubectl autocompletion - https://kubernetes.io/docs/tasks/tools/install-kubectl/#enable-kubectl-autocompletion
+#source <(kubectl completion bash)
+# https://stackoverflow.com/a/53016918
+#alias k8s-get-all-in-ns="kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 1 kubectl get --show-kind --ignore-not-found -n"
+
+# xz compression defaults and options when no options can be specified - https://superuser.com/questions/305128/how-to-specify-level-of-compression-when-using-tar-zcvf/521332#521332
+XZ_OPT='-9T0'
+XZ_DEFAULTS='-9T0'

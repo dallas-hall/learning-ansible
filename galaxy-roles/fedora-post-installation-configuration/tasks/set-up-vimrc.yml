@@ -20,7 +20,7 @@
       mode: 0644
       state: touch
 
-  - name: Adding customisations to the /home/vagrant/.vimrc file
+  - name: Adding customisations to the /home/{{ username }}/.vimrc file
     template: # https://docs.ansible.com/ansible/latest/modules/template_module.html
       src: templates/vimrc-both.j2
       dest: "/home/{{ username }}/.vimrc"
