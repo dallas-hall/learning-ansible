@@ -1,38 +1,34 @@
 ---
-- hosts: laptops
-  name: Create .vimrc files for local user and root.
+- name: Create user .vimrc file
+  file:
+    path: "/home/{{ username }}/.vimrc"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
+    state: touch
 
-  tasks:
-  - name: Create user .vimrc file
-    file:
-      path: "/home/{{ username }}/.vimrc"
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      mode: 0644
-      state: touch
+- name: Create user .vimrc file
+  become: yes
+  file:
+    path: /root/.vimrc
+    owner: root
+    group: root
+    mode: 0644
+    state: touch
 
-  - name: Create user .vimrc file
-    become: yes
-    file:
-      path: /root/.vimrc
-      owner: root
-      group: root
-      mode: 0644
-      state: touch
+- name: Adding customisations to the /home/{{ username }}/.vimrc file
+  template: # https://docs.ansible.com/ansible/latest/modules/template_module.html
+    src: templates/vimrc-both.j2
+    dest: "/home/{{ username }}/.vimrc"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0644
 
-  - name: Adding customisations to the /home/{{ username }}/.vimrc file
-    template: # https://docs.ansible.com/ansible/latest/modules/template_module.html
-      src: templates/vimrc-both.j2
-      dest: "/home/{{ username }}/.vimrc"
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      mode: 0644
-
-  - name: Adding customisations to the /root/.vimrc file
-    become: yes
-    template: # https://docs.ansible.com/ansible/latest/modules/template_module.html
-      src: templates/vimrc-both.j2
-      dest: "/root/.vimrc"
-      owner: root
-      group: root
-      mode: 0644
+- name: Adding customisations to the /root/.vimrc file
+  become: yes
+  template: # https://docs.ansible.com/ansible/latest/modules/template_module.html
+    src: templates/vimrc-both.j2
+    dest: "/root/.vimrc"
+    owner: root
+    group: root
+    mode: 0644
