@@ -1,7 +1,9 @@
 ---
 - name: Configure Fedora to my liking.
-  hosts: localhost
+  hosts: all
   become: yes
   gather_facts: yes
   roles:
+    # https://galaxy.ansible.com/robertdebock/rpmfusion
+    - robertdebock.rpmfusion
     - fedora-post-installation-configuration
