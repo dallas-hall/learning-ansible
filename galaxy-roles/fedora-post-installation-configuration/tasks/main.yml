@@ -14,9 +14,17 @@
 #  import_tasks: install-rpm-fusion.yml
 #  become: yes
 
-#- name: Add ~/.bashrc entries
-#  import_tasks: set-up-bashrc.yml
-#  become: yes
+- name: Add ~/.bashrc entries
+  import_tasks: set-up-bashrc.yml
+  become: yes
+
+- name: Add ~/.vimrc entries
+  import_tasks: set-up-vimrc.yml
+  become: yes
+
+- name: Add ~/.xprofile entries
+  import_tasks: set-up-xprofile.yml
+  become: yes
 
 - name: Install software - dnf.
   import_tasks: install-software-dnf.yml
