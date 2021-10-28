@@ -1,5 +1,4 @@
 ---
-tasks:
 - name: Create user .xprofile file
   file:
     path: "/home/{{ username }}/.xprofile"
