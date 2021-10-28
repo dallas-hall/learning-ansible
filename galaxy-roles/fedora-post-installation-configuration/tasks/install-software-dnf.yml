@@ -5,14 +5,19 @@
         - p7zip-plugins.x86_64
       state: present
 
+- name: Install VIM
+  package:
+      name: vim
+      state: present
+
 - name: Install Anki
   package:
-      name: anki.noarch
+      name: anki
       state: present
 
 - name: Install Clementine
   package:
-      name: clementine.x86_64
+      name: clementine
       state: present
 
 - name: Install Ansible
