@@ -24,12 +24,12 @@ alias l='ls -aFlh --color=auto'
 alias l.='ls -adFlhi .* --color=auto'
 #full details with inode
 alias li='ls -aFlhi --color=auto'
+# rsync goodness
+alias rsync='rsync --stats --progress --human-readable'
+# Coloured info pages
+alias info='pinfo'
 #change directory colour from dark blue to light blue
-LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
-
-
-#change directory colour from dark blue to light blue
-LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
+#LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
 
 #coloured man pages
 man() {
@@ -47,7 +47,22 @@ export GROFF_NO_SGR=1 #needed to get colours working
 
 #custom bash prompt
 # http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
-export PS1="\[\033[38;5;09m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;250m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;11m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+#export PS1="\[\033[38;5;1m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;250m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;11m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+# https://unix.stackexchange.com/a/31697
+# color names for readibility
+reset=$(tput sgr0)
+bold=$(tput bold)
+black=$(tput setaf 0)
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+magenta=$(tput setaf 5)
+cyan=$(tput setaf 6)
+white=$(tput setaf 7)
+#user_color=$green
+#[ "$UID" -eq 0 ] && { user_color=$red; }
+PS1="\[$reset\]\[$bold\][\u@\h \W] $ \[$reset\]"
 
 #shell history ignores if the same command was entered - https://unix.stackexchange.com/a/18443
 HISTCONTROL=ignoredups:erasedups
@@ -60,5 +75,13 @@ export HISTSIZE=9999
 #allow vim commands in bash
 set -o vi
 
+# Default editor as vim
+export EDITOR='/usr/bin/vim'
+
 # bash tracing with line numbers - use #!/bin/bash -x
 export PS4='$LINENO + '
+
+# xz compression defaults and options when no options can be specified - https://superuser.com/questions/305128/how-to-specify-level-of-compression-when-using-tar-zcvf/521332#521332
+XZ_OPT='-9T0'
+XZ_DEFAULTS='-9T0'
+
