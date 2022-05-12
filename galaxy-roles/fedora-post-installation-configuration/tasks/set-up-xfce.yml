@@ -1,0 +1,9 @@
+- name: Install XFCE stuff
+  package:
+      name: "{{ item }}"
+      state: present
+  loop:
+    - xfce4-power-manager
+    - xfce4-sensors-plugin
+    - xfce4-whiskermenu-plugin
+

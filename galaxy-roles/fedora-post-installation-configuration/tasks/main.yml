@@ -1,18 +1,18 @@
-#- name: Update Gnome Software - remove unwanted stuff.
-#  import_tasks: remove-unwanted-gnome-software.yml
-#  become: yes
-
-#- name: Update Gnome Software - check core functionality still exists.
-#  import_tasks: check-core-gnome-software-is-installed.yml
-#  become: yes
-
-- name: Update Gnome settings
-  import_tasks: update-gsettings.yml
+- name: Configure Gnome DE.
+  import_tasks: set-up-gnome.yml
   become: yes
+  when: using_gnome_de
 
-#- name: Install RPM Fusion repo.
-#  import_tasks: install-rpm-fusion.yml
-#  become: yes
+# TODO !!!
+- name: Configure XFCE DE.
+  import_tasks: set-up-xfce.yml
+  become: yes
+  when: using_xfce_de
+
+- name: Configure KDE DE.
+  import_tasks: set-up-xfce.yml
+  become: yes
+  when: using_kde_de
 
 - name: Add ~/.bashrc entries
   import_tasks: set-up-bashrc.yml
@@ -25,6 +25,11 @@
 - name: Add ~/.xprofile entries
   import_tasks: set-up-xprofile.yml
   become: yes
+
+# Handled by a new role.
+#- name: Install RPM Fusion.
+#  import_tasks: install-rpm-fusion.yml
+#  become: yes
 
 - name: Install software - dnf.
   import_tasks: install-software-dnf.yml

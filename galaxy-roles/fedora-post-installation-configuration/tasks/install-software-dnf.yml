@@ -1,116 +1,3 @@
-- name: Install 7zip & plugins
-  package: # Use system generic package manager, doesn't always work but works with dnf
-      name:
-        - p7zip.x86_64
-        - p7zip-plugins.x86_64
-      state: present
-
-- name: Install VIM
-  package:
-      name: vim
-      state: present
-
-- name: Install Anki
-  package:
-      name: anki
-      state: present
-
-- name: Install Clementine
-  package:
-      name: clementine
-      state: present
-
-- name: Install Ansible
-  package:
-      name: ansible
-      state: present
-
-- name: Install htop
-  package:
-      name: htop
-      state: present
-
-- name: Install KeePassXC
-  package:
-      name: keepassxc
-      state: present
-
-- name: Install menulibre - GUI Applications menu editor
-  package:
-      name: menulibre
-      state: present
-
-- name: Install Seahorse - GUI keyring manager
-  package:
-      name: menulibre
-      state: present
-
-- name: Install lm_sensors hardware monitoring
-  package:
-      name: lm_sensors
-      state: present
-
-- name: Install Midnight Commander
-  package:
-      name: mc
-      state: present
-
-- name: Install Shutter
-  package:
-      name: shutter
-      state: present
-
-- name: Install Mozilla Thunderbird
-  package:
-      name: thunderbird
-      state: present
-
-- name: Install VLC Player
-  package:
-      name: vlc
-      state: present
-
-- name: Install Okular
-  package:
-      name: okular
-      state: present
-
-- name: Install Steam
-  package:
-      name: steam
-      state: present
-
-- name: Install qbittorrent
-  package:
-      name: qbittorrent
-      state: present
-
-- name: Install xset (disable mouse accel)
-  package:
-      name: xset
-      state: present
-
-- name: Install Gnome shell extensions
-  package:
-      name: "{{ item }}"
-      state: present
-  loop:
-    - gnome-extensions-app
-    - gnome-shell-extension-appindicator
-    - gnome-shell-extension-openweather
-    - gnome-shell-extension-workspace-indicator
-    - gnome-shell-extension-sound-output-device-chooser
-    - gnome-shell-extension-apps-menu
-    - gnome-shell-extension-window-list
-    - gnome-shell-extension-launch-new-instance
-    - gnome-shell-extension-places-menu
-    - gnome-shell-extension-drive-menu
-    - gnome-shell-extension-user-theme
-    - gnome-shell-extension-topicons-plus
-    - gnome-shell-extension-gamemode
-    - gnome-shell-extension-freon
-    - gnome-shell-extension-drive-menu
-
 - name: Import Visual Studio Code key
   rpm_key:
     state: present
@@ -124,27 +11,6 @@
     gpgcheck: yes
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
 
-- name: Update cache and install Visual Studio Code
-  package:
-      name: code
-      update_cache: yes
-      state: present
-
-- name: Install the 'Development tools' package group
-  yum:
-    name: "@Development tools"
-    state: present
-
-- name: Install the 'Multimedia' package group
-  yum:
-    name: "@Multimedia"
-    state: present
-
-- name: Install the 'Sound and video' package group
-  yum:
-    name: "@Sound-and-video"
-    state: present
-
 # https://fedoraproject.org/wiki/Workstation/Third_Party_Software_Repositories#Managing_third_party_repositories_using_DNF
 - name: Install Fedora Work Stations
   package:
@@ -155,19 +21,94 @@
 - name: Enable Google Chrome in fedora-workstation-repositories
   command: dnf config-manager --set-enabled google-chrome
 
-- name: Install Google Chrome
+- name: Install applications.
   package:
-      name: google-chrome-stable
+      name: "{{ item }}"
+      state: present
       update_cache: yes
-      state: present
+  loop:
+    - flatpak
+    - ansible
+    - tigervnc
+    - keepassxc
+    - bleachbit
+    # Dev
+    - jq
+    - vim
+    - gvim
+    - code
+    # Multimedia
+    - vlc
+    - clementine
+    # Archivers
+    - p7zip
+    - p7zip-plugins
+    - unrar
+    # Gaming
+    - lutris
+    - steam
+    # Internet stuff
+    - qbittorrent
+    - quassel
+    - thunderbird
+    - weechat
+    - firefox
+    - google-chrome-stable
+    # Disable mouse accel
+    - xset
+    # Pretty print sys info
+    - neofetch
+    - inxi
+    # GUI menu editor
+    - menulibre
+    # Screenshots
+    - shutter
+    # Terminal file manager
+    - mc
+    # PDF reader
+    - okular
+    # Simple scanning
+    - simple-scan
+    # Mail
+    - mailx
+    - postfix
+    # Sys monitoring
+    - htop
+    - iotop
+    - lm_sensors
+    - xsensors
+    - logwatch
+    # Benchmarking & stress tests
+    - phoronix-test-suite
+    - stress-ng
+    - corectrl
+    # SELinux
+    - setroubleshoot
+    - setroubleshoot-plugins
+    # display management
+    - autorandr
 
-- name: Install Flatpak
-  package:
-      name: flatpak
-      state: present
+- name: Install group packages.
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "@Development tools"
+    - "@Multimedia"
+    - "@Sound-and-video"
+    - "@i3-desktop-environment"
+    - "@virtualization"
 
 - name: Enable Flathub
   command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+- name: Install AMD tools.
+  package:
+      name: "{{ item }}"
+      state: present
+  loop:
+    - radeontop
+  when: using_amd_gpu
 
 - name: Upgrade all packages
   dnf:

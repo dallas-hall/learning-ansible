@@ -1,40 +1,16 @@
-- name: Install Signal - Flatpak
+- name: Install Flatpaks
   flatpak:
-      name: org.signal.Signal
+      name: "{{ item }}"
       state: present
-
-- name: Install Slack - Flatpak
-  flatpak:
-      name: com.slack.Slack
-      state: present
-
-- name: Install Firefox - Flatpak
-  flatpak:
-      name: org.mozilla.firefox
-      state: present
-
-- name: Install Spotify - Flatpak
-  flatpak:
-      name: com.spotify.Client
-      state: present
-
-- name: Install Discord - Flatpak
-  flatpak:
-      name: com.discordapp.Discord
-      state: present
-
-- name: Install Teams - Flatpak
-  flatpak:
-      name: com.microsoft.Teams
-      state: present
-
-- name: Install Dropbox - Flatpak
-  flatpak:
-      name: com.dropbox.Client
-      state: present
-
-- name: Install Zoom - Flatpak
-  flatpak:
-      name: us.zoom.Zoom
-      state: present
-
+  loop:
+    # Messaging & video conferencing
+    - org.signal.Signal
+    - com.slack.Slack
+    - com.microsoft.Teams
+    - com.discordapp.Discord
+    - us.zoom.Zoom
+    # Internet
+    - com.dropbox.Client
+    - org.mozilla.firefox
+    # Development
+    - com.getpostman.Postman
