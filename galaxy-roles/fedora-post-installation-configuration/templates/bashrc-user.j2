@@ -13,17 +13,19 @@ fi
 # export SYSTEMD_PAGER=
 
 # User specific aliases and functions
-alias ssd='cd /ssd'
 alias dev='cd ~/Development'
 alias dls='cd ~/Downloads'
 alias opt='cd ~/opt'
 alias opt2='cd /opt'
 alias docs='cd ~/Documents'
-alias dev2='cd /ssd/Development'
+alias dev2='cd /media/veracrypt1/Development'
+alias data='cd /media/veracrypt2'
 alias books='cd /home/dallas/Documents/Books'
 alias study='cd /home/dallas/Documents/Study'
+alias linux='cd /home/dallas/Documents/Linux/System-Administration'
 alias load-conda-bashrc='source ~/.conda-bashrc'
 alias qw='cd ~/opt/Games/QuakeWorld'
+alias vids='cd ~/Videos'
 # Full details on everything
 alias l='ls -AFlh --color=auto'
 # Full details for hidden things only
@@ -34,6 +36,8 @@ alias li='ls -AFlhi --color=auto'
 alias info='pinfo'
 # rsync goodness
 alias rsync='rsync --stats --progress --human-readable'
+alias ssh-add-keys='ssh-add -t 3600'
+
 
 #change directory colour from dark blue to light blue
 #LS_COLORS=$LS_COLORS:'di=0;94:' ; export LS_COLORS
@@ -113,3 +117,16 @@ export EDITOR='/usr/bin/vim'
 # xz compression defaults and options when no options can be specified - https://superuser.com/questions/305128/how-to-specify-level-of-compression-when-using-tar-zcvf/521332#521332
 XZ_OPT='-9T0'
 XZ_DEFAULTS='-9T0'
+
+# http://rabexc.org/posts/pitfalls-of-ssh-agents
+ssh-add -l &>/dev/null
+if [ "$?" == 2 ]; then
+  test -r ~/.ssh-agent && \
+    eval "$(<~/.ssh-agent)" >/dev/null
+  ssh-add -l &>/dev/null
+  if [ "$?" == 2 ]; then
+    (umask 066; ssh-agent > ~/.ssh-agent)
+    eval "$(<~/.ssh-agent)" >/dev/null
+    ssh-add -t 3600
+  fi
+fi
