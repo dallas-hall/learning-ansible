@@ -87,6 +87,8 @@
     - setroubleshoot-plugins
     # display management
     - autorandr
+    # graphics
+    - pinta
 
 - name: Install group packages.
   yum:
