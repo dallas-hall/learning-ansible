@@ -1,8 +1,8 @@
 ---
 # defaults file for fedora
-fedora_current: 35
+fedora_current: 36
 username: dallas
-using_gnome_de: False
-using_kde_de: True
+using_gnome_de: True
+using_kde_de: False
 using_xfce_de: False
-using_amd_gpu: False
+using_amd_gpu: True

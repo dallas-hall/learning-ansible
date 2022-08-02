@@ -1,6 +1,6 @@
 ---
 - name: Configure Fedora to my liking.
-  hosts: laptop-dell-lan
+  hosts: localhost
   become: yes
   gather_facts: yes
   roles:
