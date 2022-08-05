@@ -1,9 +1,0 @@
----
-- name: Install the RPM Fusion repo packages
-  package:
-    name: "{{ item }}"
-    state: present
-    gpgcheck: no
-  loop:
-    - http://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ fedora_current }}.noarch.rpm
-    - http://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ fedora_current }}.noarch.rpm
