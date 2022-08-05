@@ -1,8 +1,0 @@
-- name: Install KDE stuff
-  package:
-      name: "{{ item }}"
-      state: present
-  loop:
-    # Needed for lm_sensors - https://bbs.archlinux.org/viewtopic.php?id=267053
-    - ksysguard
-
