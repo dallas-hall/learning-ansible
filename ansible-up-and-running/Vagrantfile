@@ -105,7 +105,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # information on available options.
       if Vagrant.has_plugin?("vagrant-hostmanager")
         nodeconfig.hostmanager.enabled = true
-        nodeconfig.hostmanager.manage_host = false
+        nodeconfig.hostmanager.manage_host = true
         nodeconfig.hostmanager.manage_guest = true
       end
 

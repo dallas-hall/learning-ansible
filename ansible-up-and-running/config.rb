@@ -6,7 +6,7 @@
 # One generic vm
 $nodes = [
   {
-    :hostname => 'almalinux-9-vm-01',
+    :hostname => 'almalinux9',
     :ip => '172.16.2.10',
     :cpus => 2,
     :memory => '2048',
@@ -16,10 +16,41 @@ $nodes = [
   }
 ]
 
+# 3 Webservers
+# $nodes = [
+#   {
+#     :hostname => 'webserver-01',
+#     :ip => '172.16.2.11',
+#     :cpus => 2,
+#     :memory => '2048',
+#     :http_port => 18080,
+#     :https_port => 18443,
+#     :groups => ['almalinux9']
+#   },
+#   {
+#     :hostname => 'webserver-02',
+#     :ip => '172.16.2.12',
+#     :cpus => 2,
+#     :memory => '2048',
+#     :http_port => 28080,
+#     :https_port => 28443,
+#     :groups => ['almalinux9']
+#   },
+#   {
+#     :hostname => 'webserver-03',
+#     :ip => '172.16.2.12',
+#     :cpus => 2,
+#     :memory => '2048',
+#     :http_port => 38080,
+#     :https_port => 38443,
+#     :groups => ['almalinux9']
+#   }
+# ]
+
 # One Mezzanine vm
 # $nodes = [
 #   {
-#     :hostname => 'mezzanine-server',
+#     :hostname => 'mezzanine',
 #     :ip => '172.16.2.14',
 #     :cpus => 4,
 #     :memory => '4096',
