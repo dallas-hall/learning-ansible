@@ -1,4 +1,4 @@
 # https://docs.ansible.com/ansible/latest/reference_appendices/config.html#environment-variables
-export ANSIBLE_ROLES_PATH=/home/blindcant/Development/ansible/galaxy-roles
-export ANSIBLE_INVENTORY=/home/blindcant/Development/ansible/ansible-up-and-running/inventories/hosts.yml
-export VAGRANT_DEFAULT_PROVIDER=virtualbox
+export ANSIBLE_ROLES_PATH=/home/dallas/Development/personal/learning/ansible/galaxy-roles
+export ANSIBLE_INVENTORY=/home/dallas/Development/personal/learning/ansible/ansible-up-and-running/inventories/hosts.yml
+export VAGRANT_DEFAULT_PROVIDER=libvirt

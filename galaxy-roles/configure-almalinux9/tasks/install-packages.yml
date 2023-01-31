@@ -1,0 +1,48 @@
+---
+- name: Install applications.
+  package:
+    # Don't use loop here as it is slow.
+    name:
+      # Dev
+      - jq
+      - vim
+      - gvim
+      - java-11-openjdk-devel
+      - java-17-openjdk-devel
+      #- code
+      - nmap-ncat
+      # Archivers
+      - p7zip
+      - p7zip-plugins
+      - unrar
+      # Pretty print sys info
+      - neofetch
+      #- inxi
+      # Terminal file manager
+      - mc
+      # Mail
+      #- mailx
+      - postfix
+      # Sys monitoring
+      - htop
+      - iotop
+      - lm_sensors
+      #- xsensors
+      - logwatch
+      # Benchmarking & stress tests
+      - phoronix-test-suite
+      - stress-ng
+      - corectrl
+      # SELinux
+      - policycoreutils-python-utils
+      - setroubleshoot
+      - setroubleshoot-server
+      # Disk tools
+      - nvme-cli
+      - smartmontools
+      # Locales
+      - glibc-langpack-en
+      # Internet stuff
+      - firefox
+    state: present
+    update_cache: yes

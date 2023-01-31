@@ -4,10 +4,23 @@
 #     cp vagrant/example_config.rb vagrant/config.rb
 
 # One generic vm
+$nodes = [
+  {
+    :hostname => 'almalinux-9-vm-01',
+    :ip => '172.16.2.10',
+    :cpus => 2,
+    :memory => '2048',
+    :http_port => 8080,
+    :https_port => 8443,
+    :groups => ['almalinux9']
+  }
+]
+
+# One Mezzanine vm
 # $nodes = [
 #   {
-#     :hostname => 'my-centos-8-vm',
-#     :ip => '172.16.2.10',
+#     :hostname => 'mezzanine-server',
+#     :ip => '172.16.2.14',
 #     :cpus => 4,
 #     :memory => '4096',
 #     :http_port => 8080,
@@ -15,19 +28,6 @@
 #     :groups => ['centos8']
 #   }
 # ]
-
-# One Mezzanine vm
-$nodes = [
-  {
-    :hostname => 'mezzanine-server',
-    :ip => '172.16.2.14',
-    :cpus => 4,
-    :memory => '4096',
-    :http_port => 8080,
-    :https_port => 8443,
-    :groups => ['centos8']
-  }
-]
 
 # Hadoop cluster
 # Class B IP address with default subnet mask 255.255.0.0

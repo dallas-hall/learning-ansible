@@ -1,0 +1,15 @@
+---
+# https://docs.ansible.com/ansible/latest/modules/yum_module.html
+# https://docs.ansible.com/ansible/latest/modules/dnf_module.html
+# https://www.jeffgeerling.com/blog/2018/reboot-and-wait-reboot-complete-ansible-playbook
+- name: Install package groups.
+  dnf:
+    name:
+      - '@Development tools'
+    state: present # Having latest here is causing a crash after it is installed.
+  register: install_result
+
+# https://docs.ansible.com/ansible/latest/modules/reboot_module.html
+- name: Reboot after installing "@Development Tools".
+  reboot:
+  when: install_result is changed

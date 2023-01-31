@@ -1,4 +1,4 @@
 ---
 # https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#group-and-host-variables
 common_username: mezzanine
-common_password: abc123 # TODO move to Ansible Vault
+common_password: Abc123!@# # TODO move to Ansible Vault

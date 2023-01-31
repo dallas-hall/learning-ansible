@@ -1,0 +1,32 @@
+---
+- name: Copy my ssh keys to the VM(s).
+  import_tasks: deploy-my-public-ssh-key.yml
+  become: no
+
+- name: .bashrc customisations.
+  import_tasks: set-up-bashrc.yml
+  become: yes
+
+- name: Add EPEL and SCL repos.
+  import_tasks: add-yum-repos.yml
+  become: yes
+
+- name: Refresh cache and upgrade all packages.
+  import_tasks: update-os.yml
+  become: yes
+
+- name: Install miscellaneous packages.
+  import_tasks: install-packages.yml
+  become: yes
+
+- name: Set locale settings.
+  import_tasks: set-locale-settings.yml
+  become: yes
+
+- name: Install miscellaneous package groups.
+  import_tasks: install-package-groups.yml
+  become: yes
+
+# - name: Install and configure Postfix mail server.
+#   import_tasks: set-up-mail-server.yml
+#   become: yes

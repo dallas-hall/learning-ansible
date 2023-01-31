@@ -1,11 +1,11 @@
 ---
-- name: Configure CentOS 8
+- name: Configure VM.
   hosts: all
   become: yes
   gather_facts: yes
   roles:
-    - configure-centos8
-    - ansible-up-and-running
+    - configure-almalinux9
+    # - ansible-up-and-running
 
 # https://docs.ansible.com/ansible/latest/modules/yum_module.html
 # - name: Update the system & reboot.

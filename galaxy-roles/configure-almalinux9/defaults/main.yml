@@ -1,0 +1,15 @@
+---
+username: vagrant
+desired_timezone: Australia/Brisbane
+desired_locale: en_AU.UTF-8
+
+# Postfix mail server - https://github.com/geerlingguy/ansible-role-postfix
+postfix_config_file: /etc/postfix/main.cf
+postfix_inet_interfaces: localhost
+postfix_inet_protocols: all
+postfix_service_state: started
+postfix_service_enabled: true
+
+# Docker
+docker_service_state: started
+docker_service_enabled: true

@@ -1,0 +1,39 @@
+---
+- name: NGINX deployment example.
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Install nginx.
+      package:
+        name: nginx
+
+    # https://stackoverflow.com/a/17415606
+    - name: Create the required nginx directories.
+      file:
+        path: '{{ item }}'
+        state: directory
+      loop:
+        - /etc/nginx/sites-available/default
+        - /etc/nginx/sites-enabled
+
+    - name: Copy nginx config file.
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/default
+
+    - name: Enable config file.
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+
+    - name: Copy index.html file.
+      template:
+        src: index.html.j2
+        dest: /usr/share/nginx/html/index.html
+
+    - name: Restart nginx.
+      service:
+        name: nginx
+        state: restarted
