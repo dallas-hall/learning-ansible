@@ -112,3 +112,39 @@ vagrant@192.168.121.181's password:
 ==> almalinux-9-vm-01: Machine already provisioned. Run `vagrant provision` or use the `--provision`
 ==> almalinux-9-vm-01: flag to force provisioning. Provisioners marked to run always will still run.
 ```
+
+## Commands
+
+```bash
+# Set up environment
+cd /home/dallas/Development/personal/learning/ansible/ansible-up-and-running
+export ANSIBLE_ROLES_PATH=/home/dallas/Development/personal/learning/ansible/galaxy-roles
+export ANSIBLE_INVENTORY=/home/dallas/Development/personal/learning/ansible/ansible-up-and-running/inventories/hosts.yml
+export VAGRANT_DEFAULT_PROVIDER=libvirt
+
+# Build VM
+vagrant up
+```
+
+Enter the password `vagrant` and wait for the Ansible provisioning to finish.
+
+**NOTE:** Remember the [SSH bug.](#ssh-bug)
+
+```bash
+# Deploy and text NGINX example
+ansible-playbook -i inventories/hosts.yml playbooks/nginx-playbook.yml
+curl localhost:8080
+```
+
+```html
+<html>
+  <head>
+    <title>Welcome to ansible</title>
+  </head>
+  <body>
+    <h1>Nginx, configured by Ansible</h1>
+    <p>If you can see this, Ansible successfully installed nginx.</p>
+    <p>Running on almalinux9</p>
+  </body>
+</html>
+```
