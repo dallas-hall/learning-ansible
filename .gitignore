@@ -139,3 +139,7 @@ vscode-ansible-workspace.code-workspace
 .idea/
 ansible-up-and-running/.vagrant/rgloader/loader.rb
 .ansible*
+
+# TLS
+*.key
+*.crt
