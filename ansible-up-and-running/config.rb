@@ -4,48 +4,48 @@
 #     cp vagrant/example_config.rb vagrant/config.rb
 
 # One generic vm
-$nodes = [
-  {
-    :hostname => 'almalinux9',
-    :ip => '172.16.2.10',
-    :cpus => 2,
-    :memory => '2048',
-    :http_port => 8080,
-    :https_port => 8443,
-    :groups => ['almalinux9']
-  }
-]
-
-# 3 servers
 # $nodes = [
 #   {
-#     :hostname => 'server-01',
-#     :ip => '172.16.2.11',
+#     :hostname => 'almalinux9',
+#     :ip => '172.16.2.10',
 #     :cpus => 2,
 #     :memory => '2048',
-#     :http_port => 1080,
-#     :https_port => 1443,
-#     :groups => ['webservers']
-#   },
-#   {
-#     :hostname => 'server-02',
-#     :ip => '172.16.2.12',
-#     :cpus => 2,
-#     :memory => '2048',
-#     :http_port => 2080,
-#     :https_port => 2443,
-#     :groups => ['webservers']
-#   },
-#   {
-#     :hostname => 'server-03',
-#     :ip => '172.16.2.13',
-#     :cpus => 2,
-#     :memory => '2048',
-#     :http_port => 3080,
-#     :https_port => 3443,
-#     :groups => ['webservers']
+#     :http_port => 8080,
+#     :https_port => 8443,
+#     :groups => ['almalinux9']
 #   }
 # ]
+
+# 3 servers
+$nodes = [
+  {
+    :hostname => 'server-01',
+    :ip => '172.16.2.11',
+    :cpus => 2,
+    :memory => '2048',
+    :http_port => 1080,
+    :https_port => 1443,
+    :groups => ['webservers']
+  },
+  {
+    :hostname => 'server-02',
+    :ip => '172.16.2.12',
+    :cpus => 2,
+    :memory => '2048',
+    :http_port => 2080,
+    :https_port => 2443,
+    :groups => ['webservers']
+  },
+  {
+    :hostname => 'server-03',
+    :ip => '172.16.2.13',
+    :cpus => 2,
+    :memory => '2048',
+    :http_port => 3080,
+    :https_port => 3443,
+    :groups => ['webservers']
+  }
+]
 
 # One Mezzanine vm
 # $nodes = [

@@ -11,6 +11,7 @@
   import_tasks: add-yum-repos.yml
   become: yes
 
+# Do one host at a time so its faster to download.
 - name: Refresh cache and upgrade all packages.
   import_tasks: update-os.yml
   become: yes
@@ -19,12 +20,12 @@
   import_tasks: install-packages.yml
   become: yes
 
-- name: Set locale settings.
-  import_tasks: set-locale-settings.yml
-  become: yes
-
 - name: Install miscellaneous package groups.
   import_tasks: install-package-groups.yml
+  become: yes
+
+- name: Set locale settings.
+  import_tasks: set-locale-settings.yml
   become: yes
 
 # - name: Install and configure Postfix mail server.

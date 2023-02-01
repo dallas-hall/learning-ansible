@@ -1,8 +1,10 @@
 ---
-- name: Configure VM.
+- name: Configure VM(s).
   hosts: all
   become: yes
   gather_facts: yes
+  # Do one machine at a time so downloads are quicker.
+  serial: 1
   roles:
     - configure-almalinux9
     # - ansible-up-and-running
