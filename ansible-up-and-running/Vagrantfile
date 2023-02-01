@@ -24,10 +24,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
-  
+
   # Replace the default insecure key.
   # https://developer.hashicorp.com/vagrant/docs/vagrantfile/ssh_settings#config-ssh-insert_key
-  #config.ssh.insert_key = false
+  config.ssh.insert_key = false
 
   # Only use Vagrant keys in the ssh-agent.
   # https://developer.hashicorp.com/vagrant/docs/vagrantfile/ssh_settings#config-ssh-keys_only
@@ -39,13 +39,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Forward SSH agent
   # https://developer.hashicorp.com/vagrant/docs/vagrantfile/ssh_settings#config-ssh-forward_agent
-  #config.ssh.forward_agent 
+  #config.ssh.forward_agent
 
   node_counter = 0
   $nodes.each do |node|
     config.vm.define node[:hostname] do |nodeconfig|
       # Every Vagrant development environment requires a box. You can search for
       # boxes at https://vagrantcloud.com/search.
+      nodeconfig.vm.hostname = node[:hostname]
       nodeconfig.vm.box = "almalinux/9"
 
       # Disable automatic box update checking. If you disable this, then
@@ -53,7 +54,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # `vagrant box outdated`. This is not recommended.
       # config.vm.box_check_update = false
       nodeconfig.vm.box_check_update = true
-      
+
       # Create a forwarded port mapping which allows access to a specific port
       # within the machine from a port on the host machine. In the example below,
       # accessing "localhost:8080" will access port 80 on the guest machine.
@@ -84,7 +85,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # config.vm.synced_folder "../data", "/vagrant_data"
 
 			# https://www.vagrantup.com/docs/synced-folders/basic_usage.html#disabling
-			#nodeconfig.vm.synced_folder ".", "/vagrant", disabled: true
+			nodeconfig.vm.synced_folder ".", "/vagrant", disabled: true
 
       # nodeconfig.ssh.private_key_path = ["vagrant_rsa", "vagrant_rsa"]
       # nodeconfig.vm.provision "file", source: "vagrant_rsa.pub", destination: "~/.ssh/"
@@ -105,7 +106,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # information on available options.
       if Vagrant.has_plugin?("vagrant-hostmanager")
         nodeconfig.hostmanager.enabled = true
-        nodeconfig.hostmanager.manage_host = true
+        nodeconfig.hostmanager.manage_host = false
         nodeconfig.hostmanager.manage_guest = true
       end
 
@@ -139,7 +140,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 				# https://www.vagrantup.com/docs/provisioning/ansible.html#ansible-parallel-execution
         nodeconfig.vm.provision :ansible do |ansible|
 					ansible.inventory_path = "inventories/hosts.yml"
-          ansible.playbook = "playbooks/generic-playbook.yml"
+          ansible.playbook = "playbooks/configure-os.yml"
           #ansible.playbook = "mezzanine-playbook.yml"
           ansible.become = true
           ansible.become_user = 'root'

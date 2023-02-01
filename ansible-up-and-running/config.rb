@@ -16,34 +16,34 @@ $nodes = [
   }
 ]
 
-# 3 Webservers
+# 3 servers
 # $nodes = [
 #   {
-#     :hostname => 'webserver-01',
+#     :hostname => 'server-01',
 #     :ip => '172.16.2.11',
 #     :cpus => 2,
 #     :memory => '2048',
-#     :http_port => 18080,
-#     :https_port => 18443,
-#     :groups => ['almalinux9']
+#     :http_port => 1080,
+#     :https_port => 1443,
+#     :groups => ['webservers']
 #   },
 #   {
-#     :hostname => 'webserver-02',
+#     :hostname => 'server-02',
 #     :ip => '172.16.2.12',
 #     :cpus => 2,
 #     :memory => '2048',
-#     :http_port => 28080,
-#     :https_port => 28443,
-#     :groups => ['almalinux9']
+#     :http_port => 2080,
+#     :https_port => 2443,
+#     :groups => ['webservers']
 #   },
 #   {
-#     :hostname => 'webserver-03',
-#     :ip => '172.16.2.12',
+#     :hostname => 'server-03',
+#     :ip => '172.16.2.13',
 #     :cpus => 2,
 #     :memory => '2048',
-#     :http_port => 38080,
-#     :https_port => 38443,
-#     :groups => ['almalinux9']
+#     :http_port => 3080,
+#     :https_port => 3443,
+#     :groups => ['webservers']
 #   }
 # ]
 
@@ -56,7 +56,7 @@ $nodes = [
 #     :memory => '4096',
 #     :http_port => 8080,
 #     :https_port => 8443,
-#     :groups => ['centos8']
+#     :groups => ['webservers']
 #   }
 # ]
 
