@@ -1,0 +1,39 @@
+server {
+  server_name {{ server_name }};
+
+  listen 80 default_server;
+  listen [::]:80 default_server ipv6only=on;
+
+  root /usr/share/nginx/html;
+  index index.html index.htm;
+
+  location / {
+  try_files $uri $uri/ =404;
+  }
+}
+
+server {
+  server_name {{ server_name }};
+
+  listen 443 ssl default_server;
+  #listen [::]:443 ssl default_server;
+
+  root /usr/share/nginx/html;
+  index index.html;
+
+  ssl_certificate "{{ tls_cert_dir }}/{{ cert_file }}";
+  ssl_certificate_key "{{ tls_key_dir }}/{{ key_file }}";
+  #ssl_session_cache shared:SSL:1m;
+  #ssl_session_timeout  10m;
+  #ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+  #ssl_ciphers HIGH:!aNULL:!MD5;
+  #ssl_prefer_server_ciphers on;
+
+  server_tokens off;
+  add_header X-Frame-Options DENY;
+  add_header X-Content-Type-Options nosniff;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+}

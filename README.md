@@ -2,6 +2,8 @@
 
 ## Ansible Up & Running
 
+**NOTE:** There are a variety of bugs in the textbook and they are using Ubuntu and I am using Red Hat which had differences as well.
+
 This majority of this code is a combination of the books [Ansible Up & Running 2nd edition](https://www.oreilly.com/library/view/ansible-up-and/9781491979792/) and the [3rd edition](https://www.oreilly.com/library/view/ansible-up-and/9781098109141/). They are both excellent resources to learn Ansible with and the code for them is available at https://github.com/ansiblebook and additional resources at https://oreil.ly/ansible-3e.
 
 At the time of doing the 3rd edition textbook I created a Python 3.10.9 virtual environment with Ansible 7.1 and Ansible Core 2.14.1.
@@ -21,32 +23,32 @@ pip install ansible
 ```
 Collecting ansible
   Downloading ansible-7.1.0-py3-none-any.whl (42.4 MB)
-     |████████████████████████████████| 42.4 MB 13.1 MB/s            
+     |████████████████████████████████| 42.4 MB 13.1 MB/s
 Collecting ansible-core~=2.14.1
   Downloading ansible_core-2.14.1-py3-none-any.whl (2.2 MB)
-     |████████████████████████████████| 2.2 MB 12.3 MB/s            
+     |████████████████████████████████| 2.2 MB 12.3 MB/s
 Collecting packaging
   Downloading packaging-23.0-py3-none-any.whl (42 kB)
-     |████████████████████████████████| 42 kB 1.3 MB/s             
+     |████████████████████████████████| 42 kB 1.3 MB/s
 Collecting jinja2>=3.0.0
   Downloading Jinja2-3.1.2-py3-none-any.whl (133 kB)
-     |████████████████████████████████| 133 kB 52.2 MB/s            
+     |████████████████████████████████| 133 kB 52.2 MB/s
 Collecting cryptography
   Downloading cryptography-39.0.0-cp36-abi3-manylinux_2_28_x86_64.whl (4.2 MB)
-     |████████████████████████████████| 4.2 MB 124.0 MB/s            
+     |████████████████████████████████| 4.2 MB 124.0 MB/s
 Collecting PyYAML>=5.1
   Downloading PyYAML-6.0-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (682 kB)
-     |████████████████████████████████| 682 kB 16.0 MB/s            
+     |████████████████████████████████| 682 kB 16.0 MB/s
 Collecting resolvelib<0.9.0,>=0.5.3
   Downloading resolvelib-0.8.1-py2.py3-none-any.whl (16 kB)
 Collecting MarkupSafe>=2.0
   Downloading MarkupSafe-2.1.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (25 kB)
 Collecting cffi>=1.12
   Downloading cffi-1.15.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (441 kB)
-     |████████████████████████████████| 441 kB 64.8 MB/s            
+     |████████████████████████████████| 441 kB 64.8 MB/s
 Collecting pycparser
   Downloading pycparser-2.21-py2.py3-none-any.whl (118 kB)
-     |████████████████████████████████| 118 kB 61.0 MB/s            
+     |████████████████████████████████| 118 kB 61.0 MB/s
 Installing collected packages: pycparser, MarkupSafe, cffi, resolvelib, PyYAML, packaging, jinja2, cryptography, ansible-core, ansible
 Successfully installed MarkupSafe-2.1.2 PyYAML-6.0 ansible-7.1.0 ansible-core-2.14.1 cffi-1.15.1 cryptography-39.0.0 jinja2-3.1.2 packaging-23.0 pycparser-2.21 resolvelib-0.8.1
 
@@ -108,12 +110,12 @@ Termianl window 1.
 ==> almalinux-9-vm-01: 80 (guest) => 8080 (host) (adapter eth0)
 ==> almalinux-9-vm-01: 443 (guest) => 8443 (host) (adapter eth0)
 ==> almalinux-9-vm-01: Rsyncing folder: /home/dallas/Development/personal/learning/ansible/ansible-up-and-running/ => /vagrant
-vagrant@192.168.121.181's password: 
+vagrant@192.168.121.181's password:
 ==> almalinux-9-vm-01: Machine already provisioned. Run `vagrant provision` or use the `--provision`
 ==> almalinux-9-vm-01: flag to force provisioning. Provisioners marked to run always will still run.
 ```
 
-## Commands
+### Exercise Commands
 
 ```bash
 # Set up environment
@@ -148,3 +150,14 @@ curl localhost:8080
   </body>
 </html>
 ```
+
+```bash
+# Create TLS certificate
+openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj '/CN=localhost' -keyout playbooks/files/nginx.key -out playbooks/files/nginx.crt
+
+
+# Install Ansible Lint for YAML checking
+pip install ansible-lint
+```
+
+**NOTE:** I faced problems getting NGINX to work with SSL because the certificate information from the book was for Debian and I am using Red Hat. Once I changed to the Red Hat way it worked correctly.

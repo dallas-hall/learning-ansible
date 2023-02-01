@@ -1,39 +1,105 @@
 ---
 - name: NGINX deployment example.
   hosts: all
-  become: yes
-  gather_facts: yes
+  become: true
+  gather_facts: true
+
+  # https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-rocky-linux-9
+  # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/deploying_web_servers_and_reverse_proxies/setting-up-and-configuring-nginx_deploying-web-servers-and-reverse-proxies
+  vars:
+    tls_cert_dir: /etc/pki/tls/certs
+    tls_key_dir: /etc/pki/tls/private
+    key_file: nginx.key
+    cert_file: nginx.crt
+    conf_file_path: /etc/nginx/conf.d
+    server_name: localhost
+
+  handlers:
+  - name: Restart nginx.
+    service:
+      name: nginx
+      state: restarted
+
   tasks:
-    - name: Install nginx.
-      package:
-        name: nginx
+  - name: Install nginx.
+    package:
+      name: nginx
 
-    # https://stackoverflow.com/a/17415606
-    - name: Create the required nginx directories.
-      file:
-        path: '{{ item }}'
-        state: directory
-      loop:
-        - /etc/nginx/sites-available/default
-        - /etc/nginx/sites-enabled
+  - name: Start nginx.
+    service:
+      name: nginx
+      state: started
 
-    - name: Copy nginx config file.
-      copy:
-        src: nginx.conf
-        dest: /etc/nginx/sites-available/default
+  # Replaced Debian folder strucutre with Red Hat folder structure.
+  # https://stackoverflow.com/a/17415606 &  https://serverfault.com/a/717509
+  # - name: Create the required nginx directories.
+  #   file:
+  #     path: "{{ item }}"
+  #     state: directory
+  #     mode: '0750'
+  #   loop:
+  #     - /etc/nginx/sites-available/
+  #     - /etc/nginx/sites-enabled
 
-    - name: Enable config file.
-      file:
-        src: /etc/nginx/sites-available/default
-        dest: /etc/nginx/sites-enabled/default
-        state: link
+  # Replaced by a template.
+  # - name: Copy nginx config file.
+  #   copy:
+  #     src: nginx.conf
+  #     dest: /etc/nginx/sites-available/default
 
-    - name: Copy index.html file.
-      template:
-        src: index.html.j2
-        dest: /usr/share/nginx/html/index.html
+  - name: Copy nginx config file.
+    template:
+      src: nginx.conf.j2
+      dest: "{{ conf_file_path }}/{{ server_name }}.conf"
+      mode: '0644'
 
-    - name: Restart nginx.
-      service:
-        name: nginx
-        state: restarted
+  # Not needed as we are using the Red Hat way.
+  # - name: Enable config file.
+  #   file:
+  #     src: /etc/nginx/sites-available/default
+  #     dest: /etc/nginx/sites-enabled/default
+  #     state: link
+
+  - name: Copy index.html file.
+    template:
+      src: index.html.j2
+      dest: /usr/share/nginx/html/index.html
+      mode: '0644'
+
+  - name: Copy TLS files.
+    copy:
+      src: "{{ item.file }}"
+      dest: "{{ item.path }}"
+      mode: '0600'
+    loop:
+      - { file: "{{ key_file }}", path: "{{ tls_key_dir }}" }
+      - { file: "{{ cert_file }}", path: "{{ tls_cert_dir }}" }
+    notify: Restart nginx.
+
+  # Force a restart via the handler before the end of the playbook.
+  - name: Restart nginx.
+    meta: flush_handlers
+
+  - name: Test http://localhost:8080/index.html
+    delegate_to: localhost
+    become: false
+    uri:
+      url: 'http://localhost:8080/index.html'
+      validate_certs: false
+      return_content: true
+    register: result
+    failed_when: "'Running on ' not in result.content"
+    tags:
+    - test
+
+  - name: Test https://localhost:8443/index.html
+    delegate_to: localhost
+    become: false
+    uri:
+      url: 'https://localhost:8443/index.html'
+      validate_certs: false
+      return_content: true
+    register: result
+    failed_when: "'Running on ' not in result.content"
+    tags:
+    - test
