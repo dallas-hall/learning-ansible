@@ -71,7 +71,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Create a private network, which allows host-only access to the machine
       # using a specific IP.
       # config.vm.network "private_network", ip: "192.168.33.10"
-      config.vm.network "private_network", ip: node[:ip]
+      nodeconfig.vm.network "private_network", ip: node[:ip]
 
       # Create a public network, which generally matched to bridged network.
       # Bridged networks make the machine appear as another physical device on
@@ -146,7 +146,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ansible.become_user = 'root'
           ansible.limit = "all"
           ansible.host_key_checking = false
-          ansible.verbose = ""
+          # Running in debug mode seems to fix my multiple provisioning issues.
+          ansible.verbose = "v"
           ansible.raw_arguments = ["--forks=4", "--flush-cache"]
         end
       end
