@@ -8,10 +8,12 @@
 #       - centos-release-scl
 #     state: present
 
-# https://fedoraproject.org/wiki/EPEL
-- name: Add Fedora EPEL repository
-  package:
-    name:
-      - epel-release.noarch
-    state: present
+# https://fedoraproject.org/wiki/EPEL & https://wiki.almalinux.org/repos/Extras.html
+- name: DNF Config management.
+  shell: dnf config-manager --set-enabled crb
 
+- name: Add Fedora EPEL repository.
+  package:
+    name: epel-release
+    state: present
+    update_cache: yes

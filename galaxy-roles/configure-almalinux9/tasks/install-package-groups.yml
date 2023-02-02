@@ -10,6 +10,6 @@
   register: install_result
 
 # https://docs.ansible.com/ansible/latest/modules/reboot_module.html
-- name: Reboot after installing "@Development Tools".
+- name: Reboot after installing package groups.
   reboot:
   when: install_result is changed

@@ -1,11 +1,12 @@
 ---
 - name: Configure VM(s).
   hosts: all
-  become: yes
-  gather_facts: yes
+  become: true
+  gather_facts: true
   # Do one machine at a time so downloads are quicker.
   serial: 1
   roles:
+    - robertdebock.rpmfusion
     - configure-almalinux9
     # - ansible-up-and-running
 
