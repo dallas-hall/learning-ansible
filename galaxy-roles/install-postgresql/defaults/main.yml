@@ -5,8 +5,8 @@
 # https://docs.ansible.com/ansible/latest/modules/postgresql_info_module.html#postgresql-info-module
 postgresql_locale: en_AU
 postgresql_database_name: my_db
-postgresql_schema_name: my_db
-postgresql_app_user: my_db
+postgresql_schema_name: my_schema
+postgresql_app_user: my_user
 postgresql_app_user_password: abc123 #TODO - move to Ansible Vault
 postgresql_encoding: UTF-8
 # https://www.postgresql.org/docs/10/collation.html

@@ -147,7 +147,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ansible.limit = "all"
           ansible.host_key_checking = false
           # Running in debug mode seems to fix my multiple provisioning issues.
-          ansible.verbose = "v"
+          ansible.verbose = ""
           ansible.raw_arguments = ["--forks=4", "--flush-cache"]
         end
       end
